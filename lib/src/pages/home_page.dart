@@ -14,42 +14,45 @@ class _HomePageState extends State<HomePage> {
 
   final appBars=[
     AppBar(
+        elevation: 20,
         title: Text("Proyectos"),
-        backgroundColor: _colorMainHome(400),
+        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10.0),
             child: CircleAvatar(
             
-              child: Text('?',style: TextStyle(color: Colors.black),),
+              child: Icon(Icons.account_circle,color: Colors.black,),
               backgroundColor: Colors.white,
             ),
           )
         ]
       ),
     AppBar(
+        elevation: 20,
         title: Text("Desarrolladores"),
-        backgroundColor: _colorMainDeve(400),
+        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10.0),
             child: CircleAvatar(
             
-              child: Text('?',style: TextStyle(color: Colors.black),),
+              child: Icon(Icons.account_circle,color: Colors.black,),
               backgroundColor: Colors.white,
             ),
           )
         ]
       ),
       AppBar(
+        elevation: 20,
         title: Text("Historias"),
-        backgroundColor: _colorMainStories(400),
+        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10.0),
             child: CircleAvatar(
             
-              child: Text('?',style: TextStyle(color: Colors.black),),
+              child: Icon(Icons.account_circle,color: Colors.black,),
               backgroundColor: Colors.white,
             ),
           )
@@ -63,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     queryData = MediaQuery.of(context);
     var tabsBody=[
-    //Inicio de home
+//Inicio de home
     ListView(
     padding: EdgeInsets.all(10.0),//symmetric(horizontal: 50.0, vertical: 10.0),
       children: <Widget>[
@@ -71,11 +74,10 @@ class _HomePageState extends State<HomePage> {
         Wrap(
         
           children: <Widget>[
-            _cardPostick(queryData,0),
-            _cardPostick(queryData,1),
-            _cardPostick(queryData,1),
-            _cardPostick(queryData,2),
-            _cardPostick(queryData,0),
+            _cardPostick(queryData),
+            _cardPostick(queryData),
+            _cardPostick(queryData),
+            
            
           ],  
         )
@@ -89,18 +91,9 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width:double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: FractionalOffset(0.0, 0.6),
-          end: FractionalOffset(0.0, 1.0),
-          colors: [
-            Color.fromRGBO(52, 54, 101, 1.0),
-            Color.fromRGBO(35, 37, 57, 1.0)
-          ]
-        )
-      ),
+      
       child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.grey[100],
           appBar: appBars[_indexNave],
           drawer: Drawer(
 
@@ -109,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
             canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
-            primaryColor: Colors.pinkAccent,
+            primaryColor: Colors.white,
             textTheme: Theme.of(context).textTheme
               .copyWith( caption: TextStyle( color: Color.fromRGBO(116, 117, 152, 1.0) ) )
             ),
@@ -131,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
               currentIndex: _indexNave,
-              selectedItemColor: _colorNavBar(_indexNave),
+              selectedItemColor: Colors.white,
               onTap: _onItemTapped,
             ),
           ),
@@ -149,134 +142,58 @@ class _HomePageState extends State<HomePage> {
   }
 }
 //generacion de proyectos
-Widget _cardPostick(MediaQueryData screenWidth, int color){
-  
-  return Stack(
-      children: <Widget>[
-        
-        InkWell(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.all(16.0),
-              width: screenWidth.size.width/2-26,
-              height: screenWidth.size.width/2-26,
-              decoration: BoxDecoration(
-                color: _colorPostick(color),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.all( Radius.circular(20)),
-                
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    spreadRadius: 7,
-                    blurRadius: 7,
-                    offset: Offset(3, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-            ),
-          ),
-          onTap: (){
+Widget _cardPostick(MediaQueryData screenWidth){
 
-          },
-        ),
+  return  InkWell(
+    child: Padding(
+      
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
         
-        InkWell(
-          
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 60.0),
-             // color:Color.fromRGBO(120, 245, 90, 0.2), 
-              height: 120,
-              width: 170,
-            
-              child: Text("Placeholder"+"\n"+"Inicio: 101010",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        child:Column(
+          children: [
+            Text(
+              
+              "Plataforma en línea de educación para niños con autismo"+"\n",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),
               ),
-            
-            ),
-          ),
-        
-          onTap: (){
-      
-          },
+            Icon(Icons.developer_board_rounded,size:50,color: Colors.white,),
+            Text( 
+              "\n"+"Inicio: 17/12/21",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+          ],
         ),
         
-      ]
-      
+        padding: EdgeInsets.all(16.0),
+        width: screenWidth.size.width/2-18,
+        height: 280,
+        
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0.0, 3.0), //(x,y)
+              blurRadius: 6.0,
+            ),
+          ],
+          color: Colors.teal[400],
+          border: Border.all(
+            
+            color: Colors.white,
+            width: 0,
+          ),
+          borderRadius: BorderRadius.all( Radius.circular(2)),
+        ),
+      ),
+    ),
+    onTap: (){
+
+    },
   );
 }
 
-//Colorcitos
-_colorMainHome(int intensidad){
-    return Colors.orangeAccent[intensidad];
-  }
-_colorMainDeve(int intensidad){
-    return Colors.teal[intensidad];
-  }
-_colorMainStories(int intensidad){
-    return Colors.pink[intensidad];
-  }
-// _colorAzul(int intensidad){
-//     return Colors.lightBlue[intensidad];
-//   }
-_colorPostick(color){
-  switch(color){
-  case 0:
-     return Colors.pink[100];
-    break;
-  case 1:
-      return Colors.orangeAccent[100];
-    break;
-  case 2:
-      return Colors.teal[100];
-    break;
-  default:
-  return Colors.amber[100];
-    break;
-}
-  
-}
-_colorNavBar(index){
-  switch(index){
-    case 0:
-  
-      return Colors.orangeAccent[400];
-      break;
-    case 1:
-   
-      return Colors.teal[400];
-      break;
-    case 2:
-    
-      return Colors.pink[400];
-      break;
-    default:
-    
-      return Colors.orangeAccent[400];
-      break;
-
-  }
-}
-
-
-
-// Widget _postick(){
-//   return Container(
-//     child: FadeInImage(
-      
-//       image: AssetImage('assets/postick.png'),
-//       placeholder: AssetImage('assets/loading.gif'),
-//       fadeInDuration: Duration(milliseconds:200),
-
-//       fit: BoxFit.fill,
-//     ),
-//   );
-// }
+//colorcitos
+//Color.fromRGBO(55, 57, 84, 1.0),
 
   
