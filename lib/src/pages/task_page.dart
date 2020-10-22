@@ -22,6 +22,7 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
           Switch(
+            
             value: _editMode,
             onChanged: (value) {
               setState(() {
@@ -33,7 +34,7 @@ class _TaskPageState extends State<TaskPage> {
         ]
       ),
       
-      body: _tabla(),
+      body: _juntar(_editMode),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
         canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -104,6 +105,7 @@ class _TaskPageState extends State<TaskPage> {
             SizedBox(
               height: 10,
             ),
+            
 
           ],
         
@@ -125,7 +127,7 @@ class _TaskPageState extends State<TaskPage> {
             alignment: Alignment.center,
             child: Text("Descripción", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: _colorBorderMain()),
               borderRadius: BorderRadius.circular(4.0),
               color: _colorMain()
                 ),
@@ -138,7 +140,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Text("Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock.",
             style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: _colorBorderMain()),
               borderRadius: BorderRadius.circular(4.0),
               color: Colors.grey[300]
             ),
@@ -161,7 +163,7 @@ class _TaskPageState extends State<TaskPage> {
             alignment: Alignment.center,
             child: Text("Responsable", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: _colorBorderMain()),
               borderRadius: BorderRadius.circular(4.0),
               color: _colorMain()
                 ),
@@ -175,7 +177,7 @@ class _TaskPageState extends State<TaskPage> {
               child: Text("Francisco guillermo de la toba balgamidades",
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
+                border: Border.all(color:_colorBorderMain()),
                 borderRadius: BorderRadius.circular(4.0),
                 color: Colors.grey[300]
               ),
@@ -199,7 +201,7 @@ class _TaskPageState extends State<TaskPage> {
             alignment: Alignment.center,
             child: Text("Inico", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: _colorBorderMain()),
               borderRadius: BorderRadius.circular(4.0),
               color: _colorMain()
                 ),
@@ -213,7 +215,7 @@ class _TaskPageState extends State<TaskPage> {
               child: Text("15/02/20",
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
+                border: Border.all(color: _colorBorderMain()),
                 borderRadius: BorderRadius.circular(4.0),
                 color: Colors.grey[300]
               ),
@@ -226,7 +228,7 @@ class _TaskPageState extends State<TaskPage> {
             alignment: Alignment.center,
             child: Text("Fin", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: _colorBorderMain()),
               borderRadius: BorderRadius.circular(4.0),
               color: _colorMain()
                 ),
@@ -240,7 +242,7 @@ class _TaskPageState extends State<TaskPage> {
               child: Text("15/02/20",
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
+                border: Border.all(color: _colorBorderMain()),
                 borderRadius: BorderRadius.circular(4.0),
                 color: Colors.grey[300]
               ),
@@ -266,7 +268,7 @@ class _TaskPageState extends State<TaskPage> {
                 alignment: Alignment.center,
                 child: Text("Estado", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: _colorMain()
                     ),
@@ -280,7 +282,7 @@ class _TaskPageState extends State<TaskPage> {
                 child: Text("Done",
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color:_colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: Colors.grey[300]
                 ),
@@ -296,7 +298,7 @@ class _TaskPageState extends State<TaskPage> {
                 alignment: Alignment.center,
                 child: Text("Requisito", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: _colorMain()
                     ),
@@ -310,7 +312,7 @@ class _TaskPageState extends State<TaskPage> {
                 child: Text("none",
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color:_colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: Colors.grey[300]
                 ),
@@ -326,7 +328,7 @@ class _TaskPageState extends State<TaskPage> {
                 alignment: Alignment.center,
                 child: Text("Esfuerzo", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: _colorMain()
                     ),
@@ -340,7 +342,7 @@ class _TaskPageState extends State<TaskPage> {
                 child: Text("3",
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: Colors.grey[300]
                 ),
@@ -356,7 +358,7 @@ class _TaskPageState extends State<TaskPage> {
                 alignment: Alignment.center,
                 child: Text("Urgencia", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: _colorMain()
                     ),
@@ -370,7 +372,7 @@ class _TaskPageState extends State<TaskPage> {
                 child: Text("Mucha",
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: _colorBorderMain()),
                   borderRadius: BorderRadius.circular(4.0),
                   color: Colors.grey[300]
                 ),
@@ -382,7 +384,45 @@ class _TaskPageState extends State<TaskPage> {
         
     );
   }
+  _juntar(onof){
+    return Stack(
+      children: [
+        _tabla(),
+        _opcionesEdicion(onof),
+        
+      ],
+    );
+  }
+  _opcionesEdicion(bool onof){
+    return Visibility(
+      child: Row(
+        
+        children: <Widget>[
+          InkWell(
+            child: Container(margin: EdgeInsets.only(left:10, top: 10),width: 50, height:50,child: Icon(Icons.clear_outlined , color: Colors.red,size: 50,)
+            ),onTap: (){
+
+            },
+          ),
+          InkWell(
+            child: Container(margin: EdgeInsets.only(left:1, top: 10),width: 50, height:50,child: Icon(Icons.mode_outlined  , color: Colors.red,size: 45,)
+            
+            ),onTap: (){
+              Navigator.pushNamed(context, '/');
+            },
+          ),
+        
+        ]
+      ),
+      
+      visible: onof,
+    );
+
+  }
   _colorMain(){
     return Colors.teal[600];
+  }
+  _colorBorderMain(){
+    return Colors.white;
   }
 }
