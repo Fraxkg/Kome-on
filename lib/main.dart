@@ -16,8 +16,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/'         : ( BuildContext context ) => HomePage(),
-        '/develop'  : ( BuildContext context ) => DevelopmentPage(),
-        '/story'  : ( BuildContext context ) => StoryPage(),
+        
+
+        // '/develop'  : ( BuildContext context ) => DevelopmentPage(),
+        // '/story'  : ( BuildContext context ) => StoryPage(),
       },
     );
   }
