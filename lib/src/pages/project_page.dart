@@ -71,7 +71,8 @@ class _ProjectPageState extends State<ProjectPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-
+      int args=index;
+      Navigator.pushNamed(context, '/',arguments: args);
       
     });
   }

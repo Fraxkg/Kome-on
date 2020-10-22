@@ -9,6 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+  bool _firstRun=false;
   MediaQueryData queryData;
   int _indexNave =0;
 
@@ -64,6 +66,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
+    int _regresarHome = ModalRoute.of(context).settings.arguments;
+    if(_regresarHome==null ){
+      // print('no returned value');
+      _indexNave=0;
+      // print(_regresarHome);
+    }else{
+      // print(_regresarHome);
+      if(!_firstRun){
+        _indexNave=_regresarHome; 
+        _firstRun=true;
+      }
+      
+      
+    }
+   
     queryData = MediaQuery.of(context);
     var tabsBody=[
 //Inicio de home
@@ -136,7 +154,8 @@ class _HomePageState extends State<HomePage> {
   }
   void _onItemTapped(int index) {
     setState(() {
-      _indexNave = index;
+      _indexNave=index;
+      
 
       
     });

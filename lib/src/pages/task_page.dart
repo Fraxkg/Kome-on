@@ -10,6 +10,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   int _indexNave=0;
   bool _editMode=false;
+
   MediaQueryData queryData;
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class _TaskPageState extends State<TaskPage> {
         ]
       ),
       
-      body: _juntar(_editMode),
+      body: _cuerpo(_editMode),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
         canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -42,9 +43,10 @@ class _TaskPageState extends State<TaskPage> {
         textTheme: Theme.of(context).textTheme
           .copyWith( caption: TextStyle( color: Color.fromRGBO(116, 117, 152, 1.0) ) )
       ),
-              child: BottomNavigationBar(
+        child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
+              
               icon: Icon(Icons.home),
               label: 'Inicio',
             ),
@@ -69,7 +71,8 @@ class _TaskPageState extends State<TaskPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-
+      int args=index;
+      Navigator.pushNamed(context, '/',arguments: args);
       
     });
   }
@@ -384,7 +387,7 @@ class _TaskPageState extends State<TaskPage> {
         
     );
   }
-  _juntar(onof){
+  _cuerpo(onof){
     return Stack(
       children: [
         _tabla(),
@@ -399,7 +402,7 @@ class _TaskPageState extends State<TaskPage> {
         
         children: <Widget>[
           InkWell(
-            child: Container(margin: EdgeInsets.only(left:10, top: 10),width: 50, height:50,child: Icon(Icons.clear_outlined , color: Colors.red,size: 50,)
+            child: Container(margin: EdgeInsets.only(left:5, top: 10),width: 50, height:50,child: Icon(Icons.clear_outlined , color: Colors.red,size: 50,)
             ),onTap: (){
 
             },
