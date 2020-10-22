@@ -32,6 +32,7 @@ class _TaskPageState extends State<TaskPage> {
           )
         ]
       ),
+      
       body: _tabla(),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -73,7 +74,13 @@ class _TaskPageState extends State<TaskPage> {
   }
   Widget _tabla(){
     return Container(
-      
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(4.0),
+        color: Colors.amberAccent[100]
+          ),
       child: SingleChildScrollView(
         child: Column(
           
@@ -214,7 +221,7 @@ class _TaskPageState extends State<TaskPage> {
           ),
           Container(
             height: 50,
-            width: 110,
+            width: 100,
             padding: EdgeInsets.all(10),
             alignment: Alignment.center,
             child: Text("Fin", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -254,10 +261,10 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
-                child: Text("Tipo", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
+                child: Text("Estado", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(4.0),
@@ -266,7 +273,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -284,10 +291,10 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
-                child: Text("Requisito:", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
+                child: Text("Requisito", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(4.0),
@@ -296,7 +303,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -314,7 +321,7 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text("Esfuerzo", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -326,7 +333,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -344,7 +351,7 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text("Urgencia", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -356,7 +363,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-5,
+                width: queryData.size.width/4-11,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -376,6 +383,6 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
   _colorMain(){
-    return Colors.pink[300];
+    return Colors.teal[600];
   }
 }

@@ -84,9 +84,9 @@ class _HomePageState extends State<HomePage> {
       ],
     ),
     //inicio de desar
-      Container(child: Text('Desarrolladores')),
+    Container(child: Text('Desarrolladores')),
       //Inicio de historias
-      Center(child: Text('Historias')),
+    Center(child: Text('Historias')),
     ];
     return Container(
       width:double.infinity,
