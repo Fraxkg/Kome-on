@@ -74,9 +74,9 @@ class _HomePageState extends State<HomePage> {
         Wrap(
         
           children: <Widget>[
-            _cardPostick(queryData),
-            _cardPostick(queryData),
-            _cardPostick(queryData),
+            _cardPostick(queryData,context),
+            _cardPostick(queryData,context),
+            _cardPostick(queryData,context),
             
            
           ],  
@@ -95,6 +95,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
           backgroundColor: Colors.grey[100],
           appBar: appBars[_indexNave],
+          
           drawer: Drawer(
 
           ),
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 //generacion de proyectos
-Widget _cardPostick(MediaQueryData screenWidth){
+Widget _cardPostick(MediaQueryData screenWidth,  context){
 
   return  InkWell(
     child: Padding(
@@ -188,7 +189,7 @@ Widget _cardPostick(MediaQueryData screenWidth){
       ),
     ),
     onTap: (){
-
+      Navigator.pushNamed(context, '/project');
     },
   );
 }
