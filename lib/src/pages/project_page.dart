@@ -9,7 +9,7 @@ class ProjectPage extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectPage> {
   MediaQueryData queryData;
-  bool _editMode= false;
+  
   int _indexNave=0;
 
   @override
@@ -20,21 +20,21 @@ class _ProjectPageState extends State<ProjectPage> {
         title: Text("Plataforma en línea de educación para niños con autismo"),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
-          Switch(
-            value: _editMode,
-            onChanged: (value) {
-              setState(() {
-                _editMode = value;
-                print(_editMode);
-              });
-            }
-          )
+          InkWell(
+            onLongPress: (){
+              
+            },
+            child: Icon(Icons.add_circle_outlined,size: 38,),
+            onTap: (){
+              
+              
+            },
+          ),
+          
         ]
       ),
       body:  _pantallaProyectos(queryData),
-          
-       
-      
+     
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -62,12 +62,7 @@ class _ProjectPageState extends State<ProjectPage> {
           onTap: _onItemTapped,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        
-        onPressed: (){
-          Navigator.pushNamed(context, '/task');
-        },
-      ),
+      
        
     );
   }
@@ -85,6 +80,7 @@ class _ProjectPageState extends State<ProjectPage> {
           child: Column(
         children: [
           _tablero(),
+          Divider(),
           Wrap(
             children: [
               
@@ -150,8 +146,90 @@ class _ProjectPageState extends State<ProjectPage> {
                     decoration: BoxDecoration(
                       border: Border.all(color:_colorBorderMain()),
                       borderRadius: BorderRadius.zero,
-                      color: Colors.grey[300]
+                      color: Colors.grey[300],
+                        
+                      
                     ),
+                    child: SingleChildScrollView(
+                      child: Column(
+///empiezan tareas To-do
+///margin right left tiene que ser =25
+                        children: <Widget>[
+                          InkWell(
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:20),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color:_colorBorderMain()),
+                                borderRadius: BorderRadius.zero,
+                                color: Colors.yellow[200],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 3.0), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],
+      
+                              ),
+                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+                            ),
+                            onTap: (){
+                              Navigator.pushNamed(context, '/task');
+                            },
+                          ),
+                          InkWell(
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.only(left:2, top: 5, bottom: 5,right:23),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color:_colorBorderMain()),
+                                borderRadius: BorderRadius.zero,
+                                color: Colors.pink[200],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 3.0), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],
+      
+                              ),
+                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+                            ),
+                            onTap: (){
+                               Navigator.pushNamed(context, '/task');
+                            },
+                          ),
+                          InkWell(
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.only(left:19, top: 5, bottom: 5,right:6),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color:_colorBorderMain()),
+                                borderRadius: BorderRadius.zero,
+                                color: Colors.blue[200],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 3.0), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],
+      
+                              ),
+                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+                            ),
+                            onTap: (){
+                               Navigator.pushNamed(context, '/task');
+                            },
+                          ),
+                        ],
+                      ),
+                    )
                    
                   ), 
                 ]
@@ -251,7 +329,6 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
     );
   }
-
   Widget _conclusion(){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -278,7 +355,6 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
     );
   }
-
   Widget _limit(){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -367,7 +443,6 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
     );
   }
-
   Widget _estadisticas(){
     return Container(
       width:getMediaWidth(queryData.size.width),
