@@ -156,8 +156,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _indexNave=index;
       
-
-      
     });
   }
 }
