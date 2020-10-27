@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   
+  String _nombreUsuario="Francisco Sánchez";
   bool _firstRun=false;
   MediaQueryData queryData;
   int _indexNave =0;
@@ -66,11 +67,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
+//nav bar desde otra pantalla
     int _regresarHome = ModalRoute.of(context).settings.arguments;
     if(_regresarHome==null ){
-      // print('no returned value');
-      _indexNave=0;
       // print(_regresarHome);
     }else{
       // print(_regresarHome);
@@ -83,6 +82,18 @@ class _HomePageState extends State<HomePage> {
     }
    
     queryData = MediaQuery.of(context);
+    var floatingButton=[
+      FloatingActionButton(
+            backgroundColor: Colors.pink[300],
+            child: Icon(Icons.add_circle_outline_outlined),
+            onPressed: (){
+             
+             Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario);
+            },
+          ),
+      Container(),
+      Container(),
+    ];
     var tabsBody=[
 //Inicio de home
     ListView(
@@ -93,8 +104,7 @@ class _HomePageState extends State<HomePage> {
         
           children: <Widget>[
             _cardPostick(queryData,context),
-            _cardPostick(queryData,context),
-            _cardPostick(queryData,context),
+            
             
            
           ],  
@@ -142,12 +152,13 @@ class _HomePageState extends State<HomePage> {
                   label: 'Historias',
                 ),
               ],
+              
               currentIndex: _indexNave,
               selectedItemColor: Colors.white,
               onTap: _onItemTapped,
             ),
           ),
-           
+          floatingActionButton: floatingButton[_indexNave],
         ),
     );
     
@@ -159,7 +170,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 }
-//generacion de proyectos
+
+
+
+//Wdiget creacion de proyectos
 Widget _cardPostick(MediaQueryData screenWidth,  context){
 
   return  InkWell(
@@ -209,6 +223,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context){
       Navigator.pushNamed(context, '/project');
     },
   );
+  
 }
 
 //colorcitos
