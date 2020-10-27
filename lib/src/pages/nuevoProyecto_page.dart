@@ -22,8 +22,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
   String _nombreUsuario="na";
   String _fechaInicio="";
   String _fechaFin="";
-  String _nombreProyecto="";
-  String _descripcion="";
+  
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +104,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         }
       },
       onChanged: (valor) => setState(() {
-          _descripcion = valor;
+          
           
         })
         
@@ -132,11 +131,14 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
       validator: (value){
         if(value.length<3){
           return 'Ingrese un nombre válido';
+        }else if(value.length>73){
+          return 'Nombre muy largo';
+        
         }else{
           return null;
         }},
       onChanged: (valor) => setState(() {
-          _nombreProyecto = valor;
+         
           
         })
         
@@ -266,8 +268,9 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
       return;
     }
     formKey.currentState.save();
-    print(proyecto.nombre);
+    //print(proyecto.nombre);
 
     proyectoProvider.crearProyecto(proyecto);
+    Navigator.pop(context,"bar");
   }
 }

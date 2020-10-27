@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   bool _firstRun=false;
   MediaQueryData queryData;
   int _indexNave =0;
-
+  
   final appBars=[
     AppBar(
         elevation: 20,
@@ -93,17 +93,18 @@ class _HomePageState extends State<HomePage> {
             child: Icon(Icons.add_circle_outline_outlined),
             onPressed: (){
              
-             Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario);
+             Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario).then((value) => setState((){}));
+             
             },
           ),
       Container(),
       Container(),
     ];
-
+  
     var tabsBody=[
 //Inicio de home        //
   //_cardPostick(queryData,context),
-   _crearTablero(queryData,proyectosProvider),
+   RefreshIndicator(onRefresh: _handleRefresh,child: _crearTablero(queryData,proyectosProvider)),
       
     //inicio de desar
     Container(child: Text('Desarrolladores')),
@@ -122,6 +123,7 @@ class _HomePageState extends State<HomePage> {
           drawer: Drawer(
 
           ),
+          
           body:tabsBody[_indexNave],
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
@@ -164,6 +166,15 @@ class _HomePageState extends State<HomePage> {
       
     });
   }
+  Future<Null> _handleRefresh() async {
+    await new Future.delayed(new Duration(seconds: 1));
+
+    setState(() {
+      
+    });
+
+    return null;
+  }
 }
 
 Widget _crearTablero(queryData,proyectosProvider){
@@ -173,10 +184,17 @@ Widget _crearTablero(queryData,proyectosProvider){
         if(snapshot.hasData){
           
           final proyectos = snapshot.data;
-          return ListView.builder(
-            itemCount: proyectos.length,
-            itemBuilder: (context, i) =>_cardPostick(queryData,context,proyectos[i]),
-          );
+         
+              
+              return GridView.builder(
+              itemCount: proyectos.length,
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: .7,
+              ),
+              itemBuilder: (context, i) =>_cardPostick(queryData,context,proyectos[i]),
+            );
+          
         }else{
           return Center(child: CircularProgressIndicator());
         }
@@ -184,6 +202,7 @@ Widget _crearTablero(queryData,proyectosProvider){
     );
 }
 
+ 
 //Wdiget creacion de proyectos
 Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
 
@@ -192,7 +211,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
       
       padding: const EdgeInsets.all(4.0),
       child: Container(
-        
+        //margin: EdgeInsets.all(100),
         child:Column(
           children: [
             Text(
