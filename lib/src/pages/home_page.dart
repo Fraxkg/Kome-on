@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/providers/proyectos_provider.dart';
  
 class HomePage extends StatefulWidget {
+   
   HomePage({Key key}) : super(key: key);
 
   @override
@@ -9,7 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
+  final proyectosProvider = new ProyectosProvider();
+
   String _nombreUsuario="Francisco Sánchez";
   bool _firstRun=false;
   MediaQueryData queryData;
@@ -67,6 +70,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+   
 //nav bar desde otra pantalla
     int _regresarHome = ModalRoute.of(context).settings.arguments;
     if(_regresarHome==null ){
@@ -103,6 +107,7 @@ class _HomePageState extends State<HomePage> {
         Wrap(
         
           children: <Widget>[
+            _crearTablero(proyectosProvider),
             _cardPostick(queryData,context),
             
             
@@ -171,7 +176,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
+Widget _crearTablero(proyectosProvider){
+    return FutureBuilder(
+      future: proyectosProvider.cargarProyectos(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return;
+      }
+    );
+}
 
 //Wdiget creacion de proyectos
 Widget _cardPostick(MediaQueryData screenWidth,  context){
@@ -223,6 +235,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context){
       Navigator.pushNamed(context, '/project');
     },
   );
+  
   
 }
 

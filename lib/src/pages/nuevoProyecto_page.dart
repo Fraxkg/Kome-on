@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:kome_on/src/models/proyecto_model.dart';
+import 'package:kome_on/src/providers/proyectos_provider.dart';
 class NuevoProyectoPage extends StatefulWidget {
+  
   NuevoProyectoPage({Key key}) : super(key: key);
 
   @override
@@ -8,6 +11,11 @@ class NuevoProyectoPage extends StatefulWidget {
 }
 
 class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
+  final formKey = GlobalKey<FormState>();
+
+  ProyectoModel proyecto= new ProyectoModel();
+  final proyectoProvider = new ProyectosProvider();
+  
   TextEditingController _inputFieldDateController = new TextEditingController();
   TextEditingController _inputFieldDateController2 = new TextEditingController();
   
@@ -38,7 +46,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         child: Container(
           padding: EdgeInsets.all(15.0),
           child: Form(
-            
+            key: formKey,
             child: Column(
               children: <Widget>[
                 Divider(),
@@ -59,7 +67,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
                   textColor: Colors.white,
                   shape: StadiumBorder(),
                   onPressed: (){
-
+                    _submit();
                   } 
                 )
                   
@@ -88,6 +96,14 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         
         icon: Icon(Icons.edit)
       ),
+      onSaved: (value)=>proyecto.descripcion=value,
+      validator: (value){
+        if(value.length<3){
+          return 'Ingrese una descripción';
+        }else{
+          return null;
+        }
+      },
       onChanged: (valor) => setState(() {
           _descripcion = valor;
           
@@ -95,6 +111,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         
     );
   }
+  
   Widget _crearNombreProyecto(){
     return TextFormField(
       //autofocus: true,
@@ -111,6 +128,13 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         
         icon: Icon(Icons.book)
       ),
+      onSaved: (value)=>proyecto.nombre=value,
+      validator: (value){
+        if(value.length<3){
+          return 'Ingrese un nombre válido';
+        }else{
+          return null;
+        }},
       onChanged: (valor) => setState(() {
           _nombreProyecto = valor;
           
@@ -136,6 +160,13 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         
         icon: Icon(Icons.account_circle)
       ),
+      onSaved: (value)=>proyecto.responsable=value,
+      validator: (value){
+        if(value.length<3){
+          return 'Ingrese un nombre válido';
+        }else{
+          return null;
+        }},
       onChanged: (valor) => setState(() {
           _nombreUsuario = valor;
           
@@ -158,6 +189,13 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         suffixIcon: Icon(Icons.calendar_today_outlined),
         icon: Icon(Icons.calendar_today)
       ),
+      onSaved: (value)=>proyecto.fechaInicio=value,
+      validator: (value){
+        if(value.length<3){
+          return 'Ingrese una fecha válida';
+        }else{
+          return null;
+        }},
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
         _selectDate(context,1);
@@ -179,6 +217,14 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         suffixIcon: Icon(Icons.calendar_today_outlined),
         icon: Icon(Icons.calendar_today)
       ),
+      onSaved: (value)=>proyecto.fechaFin=value,
+      validator: (value){
+        if(value.length<3){
+          return 'Ingrese una fecha válida';
+        }
+        else{
+          return null;
+        }},
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
         _selectDate(context,2);
@@ -186,13 +232,14 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
       },
     );
   }
+  
   _selectDate(BuildContext context,seleccion)async{
 
     DateTime picked = await showDatePicker(
       context: context,
       initialDate: new DateTime.now(),
-      firstDate: new DateTime(2018),
-      lastDate: new DateTime(2025),
+      firstDate: new DateTime(2019),
+      lastDate: new DateTime(2028),
       
       locale: Locale('es','ES')
     );
@@ -203,14 +250,24 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         _inputFieldDateController.text = _fechaInicio;
         
       });
-    }else if(picked != null && seleccion==1){
+    }else if(picked != null && seleccion==2){
       setState(() {
         _fechaFin=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
         _inputFieldDateController2.text = _fechaFin;
         
       });
     }
-    print(_fechaInicio);
-    print(_fechaFin);
+    // print(_fechaInicio);
+    // print(_fechaFin);
+  }
+
+  void _submit(){
+    if(!formKey.currentState.validate()){
+      return;
+    }
+    formKey.currentState.save();
+    print(proyecto.nombre);
+
+    proyectoProvider.crearProyecto(proyecto);
   }
 }
