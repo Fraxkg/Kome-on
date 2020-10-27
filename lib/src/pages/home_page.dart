@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
  
 class HomePage extends StatefulWidget {
@@ -98,29 +99,18 @@ class _HomePageState extends State<HomePage> {
       Container(),
       Container(),
     ];
+
     var tabsBody=[
-//Inicio de home
-    ListView(
-    padding: EdgeInsets.all(10.0),//symmetric(horizontal: 50.0, vertical: 10.0),
-      children: <Widget>[
-        
-        Wrap(
-        
-          children: <Widget>[
-            _crearTablero(proyectosProvider),
-            _cardPostick(queryData,context),
-            
-            
-           
-          ],  
-        )
-      ],
-    ),
+//Inicio de home        //
+  //_cardPostick(queryData,context),
+   _crearTablero(queryData,proyectosProvider),
+      
     //inicio de desar
     Container(child: Text('Desarrolladores')),
       //Inicio de historias
     Center(child: Text('Historias')),
     ];
+    
     return Container(
       width:double.infinity,
       height: double.infinity,
@@ -132,7 +122,7 @@ class _HomePageState extends State<HomePage> {
           drawer: Drawer(
 
           ),
-          body: tabsBody[_indexNave],
+          body:tabsBody[_indexNave],
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
             canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -176,17 +166,26 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _crearTablero(proyectosProvider){
+Widget _crearTablero(queryData,proyectosProvider){
     return FutureBuilder(
       future: proyectosProvider.cargarProyectos(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        return;
+      builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
+        if(snapshot.hasData){
+          
+          final proyectos = snapshot.data;
+          return ListView.builder(
+            itemCount: proyectos.length,
+            itemBuilder: (context, i) =>_cardPostick(queryData,context,proyectos[i]),
+          );
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
       }
     );
 }
 
 //Wdiget creacion de proyectos
-Widget _cardPostick(MediaQueryData screenWidth,  context){
+Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
 
   return  InkWell(
     child: Padding(
@@ -198,7 +197,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context){
           children: [
             Text(
               
-              "Plataforma en línea de educación para niños con autismo"+"\n",
+              "${proyecto.nombre}",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),
               ),

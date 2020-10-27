@@ -22,10 +22,17 @@ class ProyectosProvider{
     final url='$_url/proyectos.json';
     final resp= await http.get(url);
 
-    final decodedData =json.decode(resp.body);
+    final Map<String, dynamic> decodedData =json.decode(resp.body);
+    final List<ProyectoModel> proyectos = new List();
 
-    print(decodedData);
+    if(decodedData == null) return [];
+    decodedData.forEach((id, proyecto) {
+      final  proTemp = ProyectoModel.fromJson(proyecto);
+      proTemp.id=id;
 
-    return[];
+      proyectos.add(proTemp);
+    });
+    //print(proyectos[0].id);
+    return proyectos;
   }
 }
