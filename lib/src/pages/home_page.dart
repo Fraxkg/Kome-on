@@ -197,13 +197,13 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
           children: [
             Text(
               
-              "${proyecto.nombre}",
+              "${proyecto.nombre}"+"\n",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),
               ),
             Icon(Icons.developer_board_rounded,size:50,color: Colors.white,),
             Text( 
-              "\n"+"Inicio: 17/12/21",
+              "\n"+"${proyecto.fechaInicio}",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
           ],
         ),
