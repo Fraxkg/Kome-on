@@ -269,8 +269,39 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
     }
     formKey.currentState.save();
     //print(proyecto.nombre);
-
+    
     proyectoProvider.crearProyecto(proyecto);
-    Navigator.pop(context,"bar");
+    
+    Navigator.pop(context);
+    _showMyDialog(context);
+  }
+
+  void _showMyDialog(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text('¡Perfecto!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Proyecto creado con éxito'),
+                Text('Recuerda agregar tareas (´・ω・`)'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
+    );
   }
 }

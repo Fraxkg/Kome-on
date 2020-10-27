@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
             child: Icon(Icons.add_circle_outline_outlined),
             onPressed: (){
              
-             Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario).then((value) => setState((){}));
+              Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario).then((value) => setState((){}));
              
             },
           ),
