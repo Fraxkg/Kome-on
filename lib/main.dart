@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       title: 'Kome on',
       initialRoute: '/login',
       routes: {
-        '/'               : ( BuildContext context ) => HomePage(),
+        '/home'               : ( BuildContext context ) => HomePage(),
         '/project'        : ( BuildContext context ) => ProjectPage(),
         '/task'           : ( BuildContext context ) => TaskPage(),
         '/nuevoProyecto'  : ( BuildContext context ) => NuevoProyectoPage(),

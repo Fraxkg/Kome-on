@@ -73,7 +73,7 @@ class _ProjectPageState extends State<ProjectPage> {
     setState(() {
       _indexNave = index;
       //int args=index;
-      Navigator.pushNamed(context, '/');
+      Navigator.pop(context);
       
     });
   }

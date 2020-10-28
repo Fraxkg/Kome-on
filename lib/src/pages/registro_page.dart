@@ -96,7 +96,7 @@ Widget _crearBoton() {
   return RaisedButton(
     child: Container(
       padding: EdgeInsets.symmetric( horizontal: 80.0, vertical: 15.0),
-      child: Text('Ingresar'),
+      child: Text('Registrarse'),
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5.0)
@@ -147,7 +147,7 @@ Widget _crearBoton() {
 
       formKeyRegister.currentState.save();
       
-      final info =await usuarioProvider.nuevoUsuario(email, password);
+      Map info =await usuarioProvider.nuevoUsuario(email, password);
       
 
       if(info['ok']){
@@ -156,7 +156,7 @@ Widget _crearBoton() {
       }else{
         _mostrarAlerta(context,info['mensaje']);
       }
-      //Navigator.pushReplacementNamed(context, "/");
+      //Navigator.pushReplacementNamed(context, "/home");
       //formKeyLogin.crearProyecto(proyecto);
       
       //Navigator.pop(context);

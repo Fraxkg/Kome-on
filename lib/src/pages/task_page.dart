@@ -72,7 +72,7 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       _indexNave = index;
       //int args=index;
-      Navigator.pushNamed(context, '/');
+      Navigator.pop(context);
       
     });
   }
@@ -411,7 +411,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Container(margin: EdgeInsets.only(left:1, top: 10),width: 50, height:50,child: Icon(Icons.mode_outlined  , color: Colors.red,size: 45,)
             
             ),onTap: (){
-              Navigator.pushNamed(context, '/');
+              
             },
           ),
         

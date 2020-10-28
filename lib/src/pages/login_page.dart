@@ -154,12 +154,12 @@ Widget _crearBoton() {
         String userId=info['userId'];
         String emailU=info['email'];
         List args=["$userId","$emailU"];
-        Navigator.pushReplacementNamed(context, "/", arguments: args);
+        Navigator.pushReplacementNamed(context, "/home", arguments: args);
       }else{
         _mostrarAlerta(context,info['mensaje']);
       }
       
-      //Navigator.pushReplacementNamed(context, "/");
+      //Navigator.pushReplacementNamed(context, "/home");
       //formKeyLogin.crearProyecto(proyecto);
       
       //Navigator.pop(context);

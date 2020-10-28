@@ -86,8 +86,9 @@ class _HomePageState extends State<HomePage> {
      
     // }
     final List userInfo = ModalRoute.of(context).settings.arguments;
-    String userId=userInfo[0];
-    String userEmail=userInfo[1];
+    
+    final userId=userInfo[0];
+    final userEmail=userInfo[1];
     print(userId+userEmail);
     
    
