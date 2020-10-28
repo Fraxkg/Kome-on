@@ -14,6 +14,8 @@ class _ProjectPageState extends State<ProjectPage> {
 
   @override
   Widget build(BuildContext context) {
+    //String _idProyecto = ModalRoute.of(context).settings.arguments;
+    //print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -70,8 +72,8 @@ class _ProjectPageState extends State<ProjectPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-      int args=index;
-      Navigator.pushNamed(context, '/',arguments: args);
+      //int args=index;
+      Navigator.pushNamed(context, '/');
       
     });
   }

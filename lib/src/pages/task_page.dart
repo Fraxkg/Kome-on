@@ -71,8 +71,8 @@ class _TaskPageState extends State<TaskPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-      int args=index;
-      Navigator.pushNamed(context, '/',arguments: args);
+      //int args=index;
+      Navigator.pushNamed(context, '/');
       
     });
   }

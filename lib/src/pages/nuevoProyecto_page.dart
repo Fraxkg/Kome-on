@@ -19,7 +19,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
   TextEditingController _inputFieldDateController = new TextEditingController();
   TextEditingController _inputFieldDateController2 = new TextEditingController();
   
-  String _nombreUsuario="na";
+  
   String _fechaInicio="";
   String _fechaFin="";
   
@@ -27,10 +27,10 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
   @override
   Widget build(BuildContext context) {
     
-    var _loggedName = ModalRoute.of(context).settings.arguments;
-    if ( _nombreUsuario != null ) {
-      _nombreUsuario = _loggedName;
-    }
+    final List userInfo = ModalRoute.of(context).settings.arguments;
+    String userId=userInfo[0];
+    String userEmail=userInfo[1];
+    
 //controllers de text field
     
 
@@ -49,12 +49,14 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
             child: Column(
               children: <Widget>[
                 Divider(),
-                _crearNombre(_nombreUsuario),
+                _crearNombre(userEmail,userId),
                 Divider(),
                 _crearNombreProyecto(),
                 Divider(),
                 _crearDescripcion(),
                 SizedBox(height: 30,),
+                _crearWip(),
+                SizedBox(height:30),
                 _crearFechaInicio(),
                 SizedBox(height:30),
                 _crearFechaFin(),
@@ -83,7 +85,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
       //autofocus: true,
      keyboardType: TextInputType.multiline,
     maxLines: null,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0)
@@ -145,7 +147,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
     );
   }
 
-  Widget _crearNombre(String nombre,) {
+  Widget _crearNombre(String nombre,userId) {
 
     return TextFormField(
       //autofocus: true,
@@ -157,27 +159,55 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
         ),
         
         
-        labelText: 'Nombre del líder',
-        helperText: '*** Nombre de cuenta seleccionado por defecto',
+        labelText: 'Email del responsable',
+        helperText: '*** Email de cuenta seleccionado por defecto',
         
         icon: Icon(Icons.account_circle)
       ),
-      onSaved: (value)=>proyecto.responsable=value,
+      onSaved: (value){
+        proyecto.responsable=value;
+        proyecto.userId=userId;
+      },
       validator: (value){
         if(value.length<3){
-          return 'Ingrese un nombre válido';
+          return 'Ingrese un email';
         }else{
           return null;
         }},
       onChanged: (valor) => setState(() {
-          _nombreUsuario = valor;
+          
           
         })
         
     );
 
   }
+  Widget _crearWip() {
+    return TextFormField(
+     
+      keyboardType: TextInputType.numberWithOptions(decimal: false),
+      decoration: InputDecoration(
+        
+        labelText: 'WIP Limit',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0)),
+          icon: Icon(Icons.note),
+      ),
+      onSaved: (value){
+        
+        proyecto.wipLimit = value;
+      },
+      validator: (value) {
+        int wip=int.parse(value);
+        if ( value.length==1 ||value.length==2 && wip>=1 &&wip<=6  ) {
+          return null;
+        } else {
+          return 'Sólo números enteros, el Wip limit >1 <6';
+        }
 
+      },
+    );
+  }
   Widget _crearFechaInicio() {
     return TextFormField(
       enableInteractiveSelection: false,

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
+
  
 class HomePage extends StatefulWidget {
    
@@ -12,10 +13,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
   final proyectosProvider = new ProyectosProvider();
 
-  String _nombreUsuario="Francisco Sánchez";
-  bool _firstRun=false;
+  // String _nombreUsuario="Francisco Sánchez";
+  // bool _firstRun=false;
   MediaQueryData queryData;
   int _indexNave =0;
   
@@ -71,20 +73,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-   
-//nav bar desde otra pantalla
-    int _regresarHome = ModalRoute.of(context).settings.arguments;
-    if(_regresarHome==null ){
-      // print(_regresarHome);
-    }else{
-      // print(_regresarHome);
-      if(!_firstRun){
-        _indexNave=_regresarHome; 
-        _firstRun=true;
-      }
-      
-      
-    }
+    
+    // int _regresarHome = ModalRoute.of(context).settings.arguments;
+    // if(_regresarHome==null ){
+    //   // print(_regresarHome);
+    // }else{
+    //   // print(_regresarHome);
+    //   if(!_firstRun){
+    //     _indexNave=_regresarHome; 
+    //     _firstRun=true;
+    //   }
+     
+    // }
+    final List userInfo = ModalRoute.of(context).settings.arguments;
+    String userId=userInfo[0];
+    String userEmail=userInfo[1];
+    print(userId+userEmail);
+    
    
     queryData = MediaQuery.of(context);
     var floatingButton=[
@@ -92,8 +97,8 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.pink[300],
             child: Icon(Icons.add_circle_outline_outlined),
             onPressed: (){
-             
-              Navigator.pushNamed(context, '/nuevoProyecto',arguments: _nombreUsuario).then((value) => setState((){}));
+              List args=["$userId","$userEmail"];
+              Navigator.pushNamed(context, '/nuevoProyecto',arguments: args).then((value) => setState((){}));
              
             },
           ),
@@ -250,7 +255,8 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
       ),
     ),
     onTap: (){
-      Navigator.pushNamed(context, '/project');
+      String args="${proyecto.id}";
+      Navigator.pushNamed(context, '/project',arguments: args);
     },
   );
   
