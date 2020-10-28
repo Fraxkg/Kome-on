@@ -71,8 +71,8 @@ class _TaskPageState extends State<TaskPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-      //int args=index;
-      Navigator.pop(context);
+      int args=index;
+      Navigator.pushReplacementNamed(context,'/home',arguments:args);
       
     });
   }

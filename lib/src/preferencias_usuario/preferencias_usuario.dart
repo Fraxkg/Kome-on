@@ -36,6 +36,22 @@ class PreferenciasUsuario {
   set token( String value ) {
     _prefs.setString('token', value);
   }
+  // GET y SET del userid
+  get userId {
+    return _prefs.getString('userId') ?? '';
+  }
+
+  set userId( String value ) {
+    _prefs.setString('userId', value);
+  }
+  // GET y SET del email
+  get email {
+    return _prefs.getString('email') ?? '';
+  }
+
+  set email( String value ) {
+    _prefs.setString('email', value);
+  }
   
 
   // GET y SET de la última página

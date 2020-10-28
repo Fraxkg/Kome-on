@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
+import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
 
  
@@ -17,7 +18,8 @@ class _HomePageState extends State<HomePage> {
   final proyectosProvider = new ProyectosProvider();
 
   // String _nombreUsuario="Francisco Sánchez";
-  // bool _firstRun=false;
+  bool _firstRun=false;
+
   MediaQueryData queryData;
   int _indexNave =0;
   
@@ -74,22 +76,28 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     
-    // int _regresarHome = ModalRoute.of(context).settings.arguments;
-    // if(_regresarHome==null ){
-    //   // print(_regresarHome);
-    // }else{
-    //   // print(_regresarHome);
-    //   if(!_firstRun){
-    //     _indexNave=_regresarHome; 
-    //     _firstRun=true;
-    //   }
+    int _regresarHome = ModalRoute.of(context).settings.arguments;
+    if(_regresarHome==null ){
+      // print(_regresarHome);
+    }else{
+      // print(_regresarHome);
+      if(!_firstRun){
+        _indexNave=_regresarHome; 
+        _firstRun=true;
+      }
      
-    // }
-    final List userInfo = ModalRoute.of(context).settings.arguments;
+    }
+    // final List userInfo = ModalRoute.of(context).settings.arguments;
     
-    final userId=userInfo[0];
-    final userEmail=userInfo[1];
-    print(userId+userEmail);
+    // final userId=userInfo[0];
+    // final userEmail=userInfo[1];
+    // print(userId+userEmail);
+    final _prefs= new PreferenciasUsuario();
+    print("desde preferencias");
+    print(_prefs.userId); print(_prefs.email);
+    //print(_prefs.token['localId']);
+    final String userId=_prefs.userId;
+    final String userEmail=_prefs.email;
     
    
     queryData = MediaQuery.of(context);
@@ -195,6 +203,7 @@ Widget _crearTablero(queryData,proyectosProvider){
               return GridView.builder(
               itemCount: proyectos.length,
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                
                 crossAxisCount: 2,
                 childAspectRatio: .7,
               ),
@@ -217,6 +226,8 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
       
       padding: const EdgeInsets.all(4.0),
       child: Container(
+//margin de los cuadros
+        margin: EdgeInsets.only(top:10,left:4,right:4),
         //margin: EdgeInsets.all(100),
         child:Column(
           children: [

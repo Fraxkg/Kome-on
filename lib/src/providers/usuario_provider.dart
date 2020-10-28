@@ -27,6 +27,8 @@ class UsuarioProvider{
     if(decodedResp.containsKey('idToken')){
 
       _pref.token=decodedResp['idToken'];
+      _pref.userId=decodedResp['localId'];
+      _pref.email=decodedResp['email'];
       //salvar token
       return {"ok":true,'token':decodedResp['idToken'],'userId':decodedResp['localId'],'email':decodedResp['email']};
     }else{
@@ -50,6 +52,8 @@ class UsuarioProvider{
     print(decodedResp);
     if(decodedResp.containsKey('idToken')){
       _pref.token=decodedResp['idToken'];
+       _pref.userId=decodedResp['localId'];
+      _pref.email=decodedResp['email'];
       //salvar token
       return {"ok":true,'token':decodedResp['idToken'],'userId':decodedResp['localId'],'email':decodedResp['email']};
     }else{

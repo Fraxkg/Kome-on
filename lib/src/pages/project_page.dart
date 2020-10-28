@@ -1,4 +1,8 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/proyecto_model.dart';
+import 'package:kome_on/src/providers/proyectos_provider.dart';
 
 class ProjectPage extends StatefulWidget {
   ProjectPage({Key key}) : super(key: key);
@@ -9,24 +13,33 @@ class ProjectPage extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectPage> {
   MediaQueryData queryData;
-  
+  final proyectosProvider = new ProyectosProvider();
   int _indexNave=0;
 
   @override
   Widget build(BuildContext context) {
-    //String _idProyecto = ModalRoute.of(context).settings.arguments;
+    String _idProyecto = ModalRoute.of(context).settings.arguments;
     //print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Plataforma en línea de educación para niños con autismo"),
+        title: Text("$_idProyecto"),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
           InkWell(
             onLongPress: (){
               
             },
-            child: Icon(Icons.add_circle_outlined,size: 38,),
+            child: Icon(Icons.note_add,size: 38,),
+            onTap: (){
+              
+              
+            },
+          ),InkWell(
+            onLongPress: (){
+              
+            },
+            child: Icon(Icons.supervised_user_circle,size: 38,),
             onTap: (){
               
               
@@ -35,7 +48,7 @@ class _ProjectPageState extends State<ProjectPage> {
           
         ]
       ),
-      body:  _pantallaProyectos(queryData),
+      body:  _pantallaProyectos(queryData,_idProyecto),
      
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -72,48 +85,96 @@ class _ProjectPageState extends State<ProjectPage> {
   void _onItemTapped(int index) {
     setState(() {
       _indexNave = index;
-      //int args=index;
-      Navigator.pop(context);
+      int args=index;
+      Navigator.pushReplacementNamed(context,'/home',arguments: args);
       
     });
   }
-  Widget _pantallaProyectos(MediaQueryData queryData){
+ //informacion del proyecto
+  Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto){
+      return FutureBuilder(
+        future: proyectosProvider.cargarProyectos(),
+        builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            ProyectoModel seleccion;
+            var proyectos = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<proyectos.length;j++){
+                  if(proyectos[j].id==_idProyecto){
+                    seleccion=proyectos[j];
+                  }
+                }
+
+                return GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: 1,
+                itemBuilder: (context,i) => _generarInfo(queryData, context, seleccion),
+                
+                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                  
+                  crossAxisCount: 1,
+                  
+                  childAspectRatio: 2,
+                ),
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+  Widget _generarInfo(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
+    print(proyecto.nombre+"si entro");
+    return Container(
+          
+          child: Wrap(
+                children: [
+                  
+                  Container(
+                    margin: EdgeInsets.only(left:10, top: 5, bottom: 5,right:5),
+                    child:_inicio(proyecto.fechaInicio)
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:0),
+                    child:_conclusion(proyecto.fechaFin)
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:0),
+                    child:_limit(proyecto.wipLimit)
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left:10, top: 5, bottom: 5,right:5),
+                    child:_colaboradores()
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:0),
+                    child:_actividad()
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:0),
+                    child:_estadisticas()
+                  ),
+                  
+                  
+                ],
+              
+      ),
+    );
+  }
+ 
+  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto){
     return SingleChildScrollView(
           child: Column(
         children: [
           _tablero(),
           Divider(),
-          Wrap(
-            children: [
-              
-              Container(
-                margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:5),
-                child:_inicio()
-              ),
-              Container(
-                margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:0),
-                child:_conclusion()
-              ),
-              Container(
-                margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:0),
-                child:_limit()
-              ),
-              Container(
-                margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:5),
-                child:_colaboradores()
-              ),
-              Container(
-                margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:0),
-                child:_actividad()
-              ),
-              Container(
-                margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:0),
-                child:_estadisticas()
-              ),
-              
-              
-            ],
-          ),
+          _recuperarInfo(queryData,proyectosProvider,_idProyecto),
+          
           
           Divider(),
         ],
@@ -157,6 +218,7 @@ class _ProjectPageState extends State<ProjectPage> {
 ///empiezan tareas To-do
 ///margin right left tiene que ser =25
                         children: <Widget>[
+    //insercion
                           InkWell(
                             child: Container(
                               height: 100,
@@ -305,7 +367,7 @@ class _ProjectPageState extends State<ProjectPage> {
     );
   }
   
-  Widget _inicio(){
+  Widget _inicio(fechaInicio){
     return Container(
       width:getMediaWidth(queryData.size.width),
       height:90,
@@ -324,14 +386,14 @@ class _ProjectPageState extends State<ProjectPage> {
       child: Column(
         children: [
           SizedBox(height: 30,),
-          Text("20/04/20",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
+          Text("$fechaInicio",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
           SizedBox(height: 10,),
           Text("Inicio",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center)
         ],
       ),
     );
   }
-  Widget _conclusion(){
+  Widget _conclusion(fechaFin){
     return Container(
       width:getMediaWidth(queryData.size.width),
       height:90,
@@ -350,14 +412,14 @@ class _ProjectPageState extends State<ProjectPage> {
       child: Column(
         children: [
           SizedBox(height: 30,),
-          Text("22/06/21",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
+          Text("$fechaFin",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
           SizedBox(height: 10,),
           Text("Conclusión",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center)
         ],
       ),
     );
   }
-  Widget _limit(){
+  Widget _limit(wip){
     return Container(
       width:getMediaWidth(queryData.size.width),
       height:90,
@@ -376,7 +438,7 @@ class _ProjectPageState extends State<ProjectPage> {
       child: Column(
         children: [
           SizedBox(height: 30,),
-          Text("2",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
+          Text("$wip",style: TextStyle(color: Colors.black,fontSize: 20, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
           SizedBox(height: 10,),
           Text("WIP limit",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center)
         ],
