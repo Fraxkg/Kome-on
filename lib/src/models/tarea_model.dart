@@ -16,11 +16,12 @@ class TareaModel {
         this.nombre="",
         this.fechaInicio="",
         this.fechaFin="",
-        this.estadoTarea="",
-        this.tipoTarea="",
+        this.estadoTarea="to-do",
+        this.tipoTarea="análisis",
         this.esfuerzo="",
-        this.urgencia="",
+        this.urgencia="0",
         this.descTarea="",
+        this.requisito='',
     });
 
     String id;
@@ -34,6 +35,7 @@ class TareaModel {
     String esfuerzo;
     String urgencia;
     String descTarea;
+    String requisito;
 
     factory TareaModel.fromJson(Map<String, dynamic> json) => TareaModel(
         id            : json["id"],
@@ -47,6 +49,7 @@ class TareaModel {
         esfuerzo      : json["esfuerzo"],
         urgencia      : json["urgencia"],
         descTarea     : json["descTarea"],
+        requisito     : json["requisito"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -61,5 +64,7 @@ class TareaModel {
         "esfuerzo": esfuerzo,
         "urgencia": urgencia,
         "descTarea": descTarea,
+        "requisito":requisito,
+
     };
 }

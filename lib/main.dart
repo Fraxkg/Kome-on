@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:kome_on/src/pages/home_page.dart';
 import 'package:kome_on/src/pages/login_page.dart';
+import 'package:kome_on/src/pages/nuevaTarea_page.dart';
 import 'package:kome_on/src/pages/nuevoProyecto_page.dart';
 import 'package:kome_on/src/pages/project_page.dart';
 import 'package:kome_on/src/pages/registro_page.dart';
@@ -41,12 +42,13 @@ class MyApp extends StatelessWidget {
       title: 'Kome on',
       initialRoute: '/home',
       routes: {
-        '/home'            : ( BuildContext context ) => HomePage(),
+        '/home'           : ( BuildContext context ) => HomePage(),
         '/project'        : ( BuildContext context ) => ProjectPage(),
         '/task'           : ( BuildContext context ) => TaskPage(),
         '/nuevoProyecto'  : ( BuildContext context ) => NuevoProyectoPage(),
         '/login'          : ( BuildContext context ) => LoginPage(),
         '/registro'       : ( BuildContext context ) => RegistroPage(),
+        '/nuevaTarea'     : ( BuildContext context ) => NuevaTareaPage(),
       },
     );
   }

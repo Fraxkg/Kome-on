@@ -32,7 +32,7 @@ class _ProjectPageState extends State<ProjectPage> {
             },
             child: Icon(Icons.note_add,size: 38,),
             onTap: (){
-              
+              Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto);
               
             },
           ),InkWell(

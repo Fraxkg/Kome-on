@@ -151,10 +151,10 @@ Widget _crearBoton() {
 
       if(info['ok']){
         print (info['userId']);
-        String userId=info['userId'];
-        String emailU=info['email'];
-        List args=["$userId","$emailU"];
-        Navigator.pushReplacementNamed(context, "/home", arguments: args);
+        // String userId=info['userId'];
+        // String emailU=info['email'];
+        //List args=["$userId","$emailU"];
+        Navigator.pushReplacementNamed(context, "/home");
       }else{
         _mostrarAlerta(context,info['mensaje']);
       }
