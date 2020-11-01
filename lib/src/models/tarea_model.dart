@@ -12,10 +12,10 @@ class TareaModel {
     TareaModel({
         this.id,
         this.proyectoId="",
-        this.responsable="",
+        this.responsable="No asignado",
         this.nombre="",
-        this.fechaInicio="",
-        this.fechaFin="",
+        this.fechaInicio="n/a",
+        this.fechaFin="n/a",
         this.estadoTarea="To-do",
         this.tipoTarea="análisis",
         this.esfuerzo="",

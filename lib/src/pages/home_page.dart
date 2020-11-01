@@ -93,8 +93,10 @@ class _HomePageState extends State<HomePage> {
     // final userEmail=userInfo[1];
     // print(userId+userEmail);
     final _prefs= new PreferenciasUsuario();
+    print("-------------------home");
     print("desde preferencias");
     print(_prefs.userId); print(_prefs.email);
+    print("----------------");
     //print(_prefs.token['localId']);
     final String userId=_prefs.userId;
     final String userEmail=_prefs.email;

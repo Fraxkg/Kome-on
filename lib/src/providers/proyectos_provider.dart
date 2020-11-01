@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:kome_on/src/providers/equipos_provider.dart';
 
 class ProyectosProvider{
-
+  final equipoProvider = new EquiposProvider();
+  EquipoModel equipo= new EquipoModel();
   final String _url='https://kome-on.firebaseio.com';
   
 
@@ -15,8 +18,10 @@ class ProyectosProvider{
 
     final decodedData=json.decode(resp.body);
 
-    print(decodedData);
-
+    print(decodedData["name"]);
+    equipo.idProyecto=decodedData["name"];
+    equipoProvider.crearEquipo(equipo);
+    
     return true;
   
   }
@@ -29,6 +34,7 @@ class ProyectosProvider{
 
     if(decodedData == null) return [];
     decodedData.forEach((id, proyecto) {
+      
       final  proTemp = ProyectoModel.fromJson(proyecto);
       proTemp.id=id;
 

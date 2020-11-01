@@ -235,7 +235,6 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
       },
     );
   }
-
   Widget _crearFechaFin() {
     return TextFormField(
       enableInteractiveSelection: false,
@@ -301,7 +300,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
     //print(proyecto.nombre);
     
     proyectoProvider.crearProyecto(proyecto);
-    
+    //print(idProyecto);
     Navigator.pop(context);
     _showMyDialog(context);
   }

@@ -12,18 +12,22 @@ class EquipoModel {
     EquipoModel({
         this.id,
         this.idProyecto,
+        
     });
 
     String id;
     String idProyecto;
+    
 
     factory EquipoModel.fromJson(Map<String, dynamic> json) => EquipoModel(
         id: json["id"],
         idProyecto: json["idProyecto"],
+        
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "idProyecto": idProyecto,
+        
     };
 }

@@ -96,14 +96,14 @@ class _TaskPageState extends State<TaskPage> {
             Divider(),
             Container(
               
-              child:Text("#1  "+"Diseño de interfaces", style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
+              child:Text(tarea.nombre, style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
             ),
             SizedBox(
               height: 20,
             ),
             _descripcion(tarea),
             Divider(),
-            _responsable(),
+            _responsable(tarea),
             _fechas(tarea),
             Divider(),
             _atributos(queryData,tarea),
@@ -156,7 +156,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _responsable(){
+  Widget _responsable(TareaModel tarea){
     return Container(
       
       padding: EdgeInsets.only(left:10,right:10),
@@ -180,7 +180,7 @@ class _TaskPageState extends State<TaskPage> {
               padding: EdgeInsets.all(5),
               alignment: Alignment.center,
               
-              child: Text("Francisco guillermo de la toba balgamidades",
+              child: Text(tarea.responsable,
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
                 border: Border.all(color:_colorBorderMain()),

@@ -1,33 +1,37 @@
 // To parse this JSON data, do
 //
-//     final equipoModel = equipoModelFromJson(jsonString);
+//     final miembroModel = miembroModelFromJson(jsonString);
 
 import 'dart:convert';
 
-EquipoModel equipoModelFromJson(String str) => EquipoModel.fromJson(json.decode(str));
+MiembroModel miembroModelFromJson(String str) => MiembroModel.fromJson(json.decode(str));
 
-String equipoModelToJson(EquipoModel data) => json.encode(data.toJson());
+String miembroModelToJson(MiembroModel data) => json.encode(data.toJson());
 
-class EquipoModel {
-    EquipoModel({
+class MiembroModel {
+    MiembroModel({
         this.id,
         this.userId,
         this.email,
+        this.equipoId,
     });
 
     String id;
     String userId;
     String email;
+    String equipoId;
 
-    factory EquipoModel.fromJson(Map<String, dynamic> json) => EquipoModel(
+    factory MiembroModel.fromJson(Map<String, dynamic> json) => MiembroModel(
         id: json["id"],
         userId: json["userId"],
         email: json["email"],
+        equipoId: json["equipoId"],
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "userId": userId,
         "email": email,
+        "equipoId":equipoId,
     };
 }

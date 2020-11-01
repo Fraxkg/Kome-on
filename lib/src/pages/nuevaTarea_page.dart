@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/equipo_model.dart';
+import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
+import 'package:kome_on/src/providers/equipos_provider.dart';
+import 'package:kome_on/src/providers/miembros_provider.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
 import 'package:kome_on/src/providers/tareas_provider.dart';
 
@@ -12,20 +16,27 @@ class NuevaTareaPage extends StatefulWidget {
 }
 
 class _NuevaTareaPageState extends State<NuevaTareaPage> {
-
+  String _idEquipo='';
   MediaQueryData queryData;
   bool _flagUrgencia=false;
   String nombreProyecto = '';
   final proyectosProvider = new ProyectosProvider();
   final formKeyNuevaTarea = GlobalKey<FormState>();
   TareaModel tarea= new TareaModel();
+  final equiposProvider = new EquiposProvider();
   final tareaProvider = new TareasProvider();
+  final miembroProvider = new MiembrosProvider();
   String tipo='Diseño';
   String requisito='Ninguno';
   List _tipos= ['Diseño', 'Análisis','Programación','a','Libre'];
   List _requisitos= ['Ninguno','actividad 1', 'actividad 2'];
   String _opcionSelecTipos;
   String _opcionSelecRequisitos;
+
+  String miembro="No asignado";
+  List _miembros= ["No asignado"];
+  String _opcionSelecMiembros;
+
   TextEditingController _inputFieldDateController = new TextEditingController();
   TextEditingController _inputFieldDateController2 = new TextEditingController();
   
@@ -51,6 +62,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
             key: formKeyNuevaTarea,
             child: Column(
               children: <Widget>[
+                _verificarEquipo(_idProyecto),
                 _verificarProyecto(_idProyecto,queryData),
                 //_crearNombreProyecto(nombreProyecto),
                 Divider(),
@@ -69,10 +81,20 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
                 _crearDescripcion(),
                 SizedBox(height: 20),
                 _esfuerzo(),
-                SizedBox(height: 20),
-                _crearFechaInicio(),
-                SizedBox(height: 20),
-                _crearFechaFin(),
+                // SizedBox(height: 20),
+                // _crearFechaInicio(),
+                // SizedBox(height: 20),
+                // _crearFechaFin(),
+                Divider(),
+                Row(
+                  mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Icon(Icons.verified_user),
+                    _obtenerMiembros(),
+                  ]
+                  
+                ),
+                
                 Divider(),
                 _crearUrgencia(),
                 Divider(),
@@ -99,6 +121,47 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
        
     );
   }
+  Widget _obtenerMiembros(){
+    return FutureBuilder(
+        future: miembroProvider.cargarMiembro(),
+        builder: (BuildContext context, AsyncSnapshot<List<MiembroModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            //MiembroModel seleccion;
+            var miembros = snapshot.data;
+              //print(_idProyecto);
+                
+                //print(_idEquipo);
+                _miembros=["No asignado"];
+                for(int j=0;j<miembros.length;j++){
+                  if(miembros[j].equipoId==_idEquipo){
+                   // print("si entra");
+                    
+                    
+                    _miembros.add(miembros[j].email);
+                   
+                  }
+                }
+                // print("aaaa"+miembro);
+                // print(_miembros);
+                Future.delayed(const Duration(milliseconds: 500), () {
+
+// Here you can write your code
+
+                  setState(() {
+                    // Here you can write your code for open new view
+                  });
+
+                });
+                return _crearMiembros();
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+  
   _crearUrgencia(){
     return Row(
       children:<Widget>[
@@ -115,62 +178,62 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       ]
     );
   }
-  Widget _crearFechaInicio() {
-    return TextFormField(
-      enableInteractiveSelection: false,
-      controller: _inputFieldDateController,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0)
-        ),
-        hintText: 'Fecha de Inicio',
-        labelText: 'Fecha de Inicio',
-        suffixIcon: Icon(Icons.calendar_today_outlined),
-        icon: Icon(Icons.calendar_today)
-      ),
-      onSaved: (value)=>tarea.fechaInicio=value,
-      validator: (value){
-        if(value.length<3){
-          return 'Ingrese una fecha válida';
-        }else{
-          return null;
-        }},
-      onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
-        _selectDate(context,1);
+  // Widget _crearFechaInicio() {
+  //   return TextFormField(
+  //     enableInteractiveSelection: false,
+  //     controller: _inputFieldDateController,
+  //     decoration: InputDecoration(
+  //       border: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(20.0)
+  //       ),
+  //       hintText: 'Fecha de Inicio',
+  //       labelText: 'Fecha de Inicio',
+  //       suffixIcon: Icon(Icons.calendar_today_outlined),
+  //       icon: Icon(Icons.calendar_today)
+  //     ),
+  //     onSaved: (value)=>tarea.fechaInicio=value,
+  //     validator: (value){
+  //       if(value.length<3){
+  //         return 'Ingrese una fecha válida';
+  //       }else{
+  //         return null;
+  //       }},
+  //     onTap: () {
+  //       FocusScope.of(context).requestFocus(new FocusNode());
+  //       _selectDate(context,1);
   
-      },
-    );
-  }
+  //     },
+  //   );
+  // }
 
-  Widget _crearFechaFin() {
-    return TextFormField(
-      enableInteractiveSelection: false,
-      controller: _inputFieldDateController2,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0)
-        ),
-        hintText: 'Fecha de Finalización',
-        labelText: 'Fecha de Finalización',
-        suffixIcon: Icon(Icons.calendar_today_outlined),
-        icon: Icon(Icons.calendar_today)
-      ),
-      onSaved: (value)=>tarea.fechaFin=value,
-      validator: (value){
-        if(value.length<3){
-          return 'Ingrese una fecha válida';
-        }
-        else{
-          return null;
-        }},
-      onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
-        _selectDate(context,2);
+  // Widget _crearFechaFin() {
+  //   return TextFormField(
+  //     enableInteractiveSelection: false,
+  //     controller: _inputFieldDateController2,
+  //     decoration: InputDecoration(
+  //       border: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(20.0)
+  //       ),
+  //       hintText: 'Fecha de Finalización',
+  //       labelText: 'Fecha de Finalización',
+  //       suffixIcon: Icon(Icons.calendar_today_outlined),
+  //       icon: Icon(Icons.calendar_today)
+  //     ),
+  //     onSaved: (value)=>tarea.fechaFin=value,
+  //     validator: (value){
+  //       if(value.length<3){
+  //         return 'Ingrese una fecha válida';
+  //       }
+  //       else{
+  //         return null;
+  //       }},
+  //     onTap: () {
+  //       FocusScope.of(context).requestFocus(new FocusNode());
+  //       _selectDate(context,2);
   
-      },
-    );
-  }
+  //     },
+  //   );
+  // }
   
 
   Widget _crearTipo(){
@@ -203,6 +266,45 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
             },
             
             hint: Text("Tipo",style: TextStyle(
+                    color: Colors.white,)),
+          ),
+        ),
+      ),
+    ); 
+  }
+  Widget _crearMiembros(){
+    // print("emial lider"+miembro);
+    // print("lista"+_miembros.toString()); 
+    return Container(
+      
+      decoration: BoxDecoration(
+        
+        borderRadius: BorderRadius.circular(15.0),
+        color: Colors.cyan,
+        border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
+      ),
+      padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
+      child: DropdownButtonHideUnderline(
+        child: ButtonTheme(
+            //alignedDropdown: true,
+          child: DropdownButton(
+            
+            icon: Icon(Icons.expand_more,color: Colors.white, ),
+            dropdownColor: Colors.teal.withOpacity(.9),
+            //focusColor: Color.fromRGBO(0, 106, 120,.5),
+            style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+            value: _opcionSelecMiembros,
+            items: getOpcionesDropdownMiembros(),
+            onTap: (){},
+
+            onChanged: (op){
+              setState(() {
+                
+                 _opcionSelecMiembros = op;
+              });
+            },
+            
+            hint: Text("Responsable",style: TextStyle(
                     color: Colors.white,)),
           ),
         ),
@@ -258,7 +360,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
           borderRadius: BorderRadius.circular(20.0)
         ),
         
-        labelText: 'Descripción del proyecto',
+        labelText: 'Descripción de la tarea',
         
         icon: Icon(Icons.edit)
       ),
@@ -356,6 +458,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       tarea.proyectoId = _idProyecto;
       tarea.tipoTarea=_opcionSelecTipos;
       tarea.requisito=_opcionSelecRequisitos;
+      tarea.responsable=_opcionSelecMiembros;
       if(_flagUrgencia){
         tarea.urgencia='Si';
       }else{
@@ -388,7 +491,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
          
             return Container(
               
-              width:queryData.size.width,
+              width: queryData.size.width,
               child: Text(nombreProyecto,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
               );
           
@@ -485,6 +588,19 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       return lista;
   }
 
+  List<DropdownMenuItem<String>>getOpcionesDropdownMiembros(){
+      
+    List<DropdownMenuItem<String>> lista = new List();
+      
+      _miembros.forEach((miembro){
+        lista.add(DropdownMenuItem(
+          child: Text(miembro),
+          value: miembro,
+        ));
+      });
+      return lista;
+  }
+
   _selectDate(BuildContext context,seleccion)async{
 
     DateTime picked = await showDatePicker(
@@ -512,5 +628,33 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
     // print(_fechaInicio);
     // print(_fechaFin);
   }
-
+  Widget _verificarEquipo(String proyectoId){
+      
+      return FutureBuilder(
+        future: equiposProvider.cargarEquipo(),
+        
+        builder: (BuildContext context, AsyncSnapshot<List<EquipoModel>> snapshot){
+          if(snapshot.hasData){
+            
+            final equipo = snapshot.data;
+            for(int i=0;i<equipo.length;i++){
+              if(equipo[i].idProyecto==proyectoId){
+                _idEquipo=equipo[i].id;
+                
+              }
+            }
+          
+            return Container(
+              height: 5,
+              width:30,
+              child: Text(_idEquipo,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+            );
+            
+          }else{
+            return Center(child: CircularProgressIndicator());
+          
+          }
+        }
+      );
+    }
 }

@@ -3,8 +3,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/equipo_model.dart';
+import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
+
+import 'package:kome_on/src/providers/equipos_provider.dart';
+import 'package:kome_on/src/providers/miembros_provider.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
 import 'package:kome_on/src/providers/tareas_provider.dart';
 
@@ -17,16 +22,19 @@ class ProjectPage extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectPage> {
 
-  
   MediaQueryData queryData;
+  String _idEquipo='';
   final proyectosProvider = new ProyectosProvider();
   final tareasProvider = new TareasProvider();
+  final equiposProvider = new EquiposProvider();
+   final miembrosProvider = new MiembrosProvider();
   int _indexNave=0;
 
   @override
   Widget build(BuildContext context) {
     String _idProyecto = ModalRoute.of(context).settings.arguments;
-    //print(_idProyecto);
+
+    print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -98,18 +106,23 @@ class _ProjectPageState extends State<ProjectPage> {
     });
   }
   Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto){
+    
     return SingleChildScrollView(
           child: Column(
         children: [
           
           _tablero(_idProyecto),
           Divider(),
+          _verificarEquipo(_idProyecto),
+          Divider(),
           _recuperarInfo(queryData,proyectosProvider,_idProyecto),
-          Divider(),
-          Divider(),
           
           
           Divider(),
+          SizedBox(height:6),
+          
+
+          
         ],
       ),
     );
@@ -274,6 +287,39 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
                   
                   childAspectRatio: 2,
                 ),
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+
+  Widget _recuperarInfoMiembros(){
+      return FutureBuilder(
+        future: miembrosProvider.cargarMiembro(),
+        builder: (BuildContext context, AsyncSnapshot<List<MiembroModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            MiembroModel seleccion;
+            var miembros = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<miembros.length;j++){
+                  if(miembros[j].equipoId==_idEquipo){
+                    seleccion=miembros[j];
+                  }
+                }
+
+                return ListView.builder(
+                 physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: 1,
+                itemBuilder: (context,i) => _nombreMiembros(seleccion),
+                
+                 
               );
 
           }else{
@@ -558,16 +604,19 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       child: SingleChildScrollView(
         child: Column(
           children: [
+
+            
             SizedBox(height: 10,),
             Text("Colaboradores",style: TextStyle(color: Colors.black,fontSize: 18, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
             SizedBox(height: 10,),
-            Text("JUan 1",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
-            Text("Ramon 2",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
-            Text("Pedrito sola",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
+            _recuperarInfoMiembros(),
           ],
         ),
       ),
     );
+  }
+  Widget _nombreMiembros(MiembroModel miembro){
+    return Text(miembro.email,style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center);
   }
   Widget _actividad(){
     return Container(
@@ -657,6 +706,35 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
     double numero2 = 25-(numero1);
     var margen=[numero1,numero2];
     return margen;
+  }
+  Widget _verificarEquipo(String proyectoId){
+    
+    return FutureBuilder(
+      future: equiposProvider.cargarEquipo(),
+      
+      builder: (BuildContext context, AsyncSnapshot<List<EquipoModel>> snapshot){
+        if(snapshot.hasData){
+          
+          final equipo = snapshot.data;
+          for(int i=0;i<equipo.length;i++){
+            if(equipo[i].idProyecto==proyectoId){
+              _idEquipo=equipo[i].id;
+               
+            }
+          }
+         
+          return Container(
+            height: 10,
+            width:30,
+            child: Text(_idEquipo,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+          );
+          
+        }else{
+          return Center(child: CircularProgressIndicator());
+        
+        }
+      }
+    );
   }
 
 }
