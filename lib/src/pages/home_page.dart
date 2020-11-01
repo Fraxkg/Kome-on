@@ -211,7 +211,16 @@ Widget _crearTablero(queryData,proyectosProvider){
             );
           
         }else{
-          return Center(child: CircularProgressIndicator());
+          return Column(
+            children:<Widget>[
+              Center(
+              child: CircularProgressIndicator()
+              ),
+              Text("No hay proyectos aún, agrega uno o actualiza la página")
+            ]
+              
+          );
+
         }
       }
     );

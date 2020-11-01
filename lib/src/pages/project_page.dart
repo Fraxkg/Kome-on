@@ -1,8 +1,12 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
+import 'package:kome_on/src/models/tarea_model.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
+import 'package:kome_on/src/providers/tareas_provider.dart';
 
 class ProjectPage extends StatefulWidget {
   ProjectPage({Key key}) : super(key: key);
@@ -12,8 +16,11 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
+
+  
   MediaQueryData queryData;
   final proyectosProvider = new ProyectosProvider();
+  final tareasProvider = new TareasProvider();
   int _indexNave=0;
 
   @override
@@ -32,7 +39,7 @@ class _ProjectPageState extends State<ProjectPage> {
             },
             child: Icon(Icons.note_add,size: 38,),
             onTap: (){
-              Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto);
+              Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
               
             },
           ),InkWell(
@@ -48,7 +55,7 @@ class _ProjectPageState extends State<ProjectPage> {
           
         ]
       ),
-      body:  _pantallaProyectos(queryData,_idProyecto),
+      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto)),
      
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -90,6 +97,153 @@ class _ProjectPageState extends State<ProjectPage> {
       
     });
   }
+  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto){
+    return SingleChildScrollView(
+          child: Column(
+        children: [
+          
+          _tablero(_idProyecto),
+          Divider(),
+          _recuperarInfo(queryData,proyectosProvider,_idProyecto),
+          Divider(),
+          Divider(),
+          
+          
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+//informacion de las tareas ToDo
+Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto){
+      return FutureBuilder(
+        future: tareasProvider.cargarTareas(),
+        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            List<TareaModel> seleccion=[];
+            var tareas = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<tareas.length;j++){
+                  if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="To-do"){
+                    seleccion.add(tareas[j]);
+                  }
+                }
+
+                return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: seleccion.length,
+                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+// in p rogress
+Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto){
+      return FutureBuilder(
+        future: tareasProvider.cargarTareas(),
+        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            List<TareaModel> seleccion=[];
+            var tareas = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<tareas.length;j++){
+                  if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="In progress"){
+                    seleccion.add(tareas[j]);
+                  }
+                }
+
+                return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: seleccion.length,
+                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+/// done
+Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
+      return FutureBuilder(
+        future: tareasProvider.cargarTareas(),
+        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            List<TareaModel> seleccion=[];
+            var tareas = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<tareas.length;j++){
+                  if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="Done"){
+                    seleccion.add(tareas[j]);
+                  }
+                }
+
+                return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: seleccion.length,
+                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
+  }
+  
+//crear postiti
+  _crearTareas(TareaModel tarea){
+    List<double> margenes=_numero25();
+    double l =margenes[0];
+    double r =margenes[1];
+    return InkWell(
+      child: Container(
+        height: 100,
+        
+        margin: EdgeInsets.only(left:l, top: 5, bottom: 5,right:r),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color:_colorBorderMain()),
+          borderRadius: BorderRadius.zero,
+          color: Colors.yellow[200],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0.0, 3.0), //(x,y)
+              blurRadius: 6.0,
+            ),
+          ],
+
+        ),
+        child: Text(tarea.nombre,style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+      ),
+      onTap: (){
+        String idTarea=tarea.id;
+        Navigator.pushNamed(context, '/task',arguments: idTarea).then((value) => setState((){}));
+      },
+    );
+  }
  //informacion del proyecto
   Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto){
       return FutureBuilder(
@@ -108,7 +262,7 @@ class _ProjectPageState extends State<ProjectPage> {
                 }
 
                 return GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: 1,
@@ -129,7 +283,7 @@ class _ProjectPageState extends State<ProjectPage> {
       );
   }
   Widget _generarInfo(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
-    print(proyecto.nombre+"si entro");
+    //print(proyecto.nombre+"si entro");
     return Container(
           
           child: Wrap(
@@ -167,21 +321,8 @@ class _ProjectPageState extends State<ProjectPage> {
     );
   }
  
-  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto){
-    return SingleChildScrollView(
-          child: Column(
-        children: [
-          _tablero(),
-          Divider(),
-          _recuperarInfo(queryData,proyectosProvider,_idProyecto),
-          
-          
-          Divider(),
-        ],
-      ),
-    );
-  }
-  Widget _tablero(){
+  
+  Widget _tablero(_idProyecto){
     return Container(
       margin: EdgeInsets.only(left:5, top: 10, bottom: 10,right:5),
       
@@ -218,79 +359,9 @@ class _ProjectPageState extends State<ProjectPage> {
 ///empiezan tareas To-do
 ///margin right left tiene que ser =25
                         children: <Widget>[
-    //insercion
-                          InkWell(
-                            child: Container(
-                              height: 100,
-                              margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:20),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(color:_colorBorderMain()),
-                                borderRadius: BorderRadius.zero,
-                                color: Colors.yellow[200],
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 3.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-      
-                              ),
-                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
-                            ),
-                            onTap: (){
-                              Navigator.pushNamed(context, '/task');
-                            },
-                          ),
-                          InkWell(
-                            child: Container(
-                              height: 100,
-                              margin: EdgeInsets.only(left:2, top: 5, bottom: 5,right:23),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(color:_colorBorderMain()),
-                                borderRadius: BorderRadius.zero,
-                                color: Colors.pink[200],
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 3.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-      
-                              ),
-                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
-                            ),
-                            onTap: (){
-                               Navigator.pushNamed(context, '/task');
-                            },
-                          ),
-                          InkWell(
-                            child: Container(
-                              height: 100,
-                              margin: EdgeInsets.only(left:19, top: 5, bottom: 5,right:6),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(color:_colorBorderMain()),
-                                borderRadius: BorderRadius.zero,
-                                color: Colors.blue[200],
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 3.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-      
-                              ),
-                              child: Text("Tarea #1\nDiseño",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
-                            ),
-                            onTap: (){
-                               Navigator.pushNamed(context, '/task');
-                            },
-                          ),
+    //insercionS
+                          _recuperarInfoTareaToDo(queryData, tareasProvider, _idProyecto)
+                         
                         ],
                       ),
                     )
@@ -324,6 +395,17 @@ class _ProjectPageState extends State<ProjectPage> {
                       borderRadius: BorderRadius.zero,
                       color: Colors.grey[300]
                     ),
+                    child: SingleChildScrollView(
+                      child: Column(
+///empiezan tareas To-do
+///margin right left tiene que ser =25
+                        children: <Widget>[
+    //insercionS
+                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto)
+                         
+                        ],
+                      ),
+                    )
                     
                   ),
                   
@@ -354,7 +436,19 @@ class _ProjectPageState extends State<ProjectPage> {
                       borderRadius: BorderRadius.zero,
                       color: Colors.grey[300]
                     ), 
-                  ), 
+                    child: SingleChildScrollView(
+                      child: Column(
+///empiezan tareas To-do
+///margin right left tiene que ser =25
+                        children: <Widget>[
+    //insercionS
+                          _recuperarInfoTareaDone(queryData, tareasProvider, _idProyecto)
+                         
+                        ],
+                      ),
+                    )
+                  ),
+                  
                 ]
                 
               ),
@@ -547,4 +641,22 @@ class _ProjectPageState extends State<ProjectPage> {
   } 
   return queryData.size.width/3-10; 
 }
+ Future<Null> _handleRefresh() async {
+    await new Future.delayed(new Duration(seconds: 1));
+
+    setState(() {
+      
+    });
+
+    return null;
+  }
+
+  List<double> _numero25(){
+    final _rng = new Random();
+    double numero1 = _rng.nextInt(22-3).toDouble();
+    double numero2 = 25-(numero1);
+    var margen=[numero1,numero2];
+    return margen;
+  }
+
 }

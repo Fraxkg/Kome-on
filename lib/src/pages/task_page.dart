@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/tarea_model.dart';
+import 'package:kome_on/src/providers/tareas_provider.dart';
  
 class TaskPage extends StatefulWidget {
   TaskPage({Key key}) : super(key: key);
@@ -10,11 +12,12 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   int _indexNave=0;
   bool _editMode=false;
-
+  final tareasProvider= new TareasProvider();
   MediaQueryData queryData;
   @override
   Widget build(BuildContext context) {
-    
+    String _idTarea = ModalRoute.of(context).settings.arguments;
+    print(_idTarea);
     queryData = MediaQuery.of(context);
 
     return Scaffold(
@@ -35,7 +38,7 @@ class _TaskPageState extends State<TaskPage> {
         ]
       ),
       
-      body: _cuerpo(_editMode),
+      body: _cuerpo(_editMode,_idTarea),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
         canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -76,7 +79,7 @@ class _TaskPageState extends State<TaskPage> {
       
     });
   }
-  Widget _tabla(){
+  Widget _tabla(TareaModel tarea){
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -98,12 +101,12 @@ class _TaskPageState extends State<TaskPage> {
             SizedBox(
               height: 20,
             ),
-            _descripcion(),
+            _descripcion(tarea),
             Divider(),
             _responsable(),
-            _fechas(),
+            _fechas(tarea),
             Divider(),
-            _atributos(queryData),
+            _atributos(queryData,tarea),
             
             SizedBox(
               height: 10,
@@ -117,7 +120,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _descripcion(){
+  Widget _descripcion(TareaModel tarea){
     return Container(
       
       padding: EdgeInsets.only(left:10,right:10),
@@ -140,7 +143,7 @@ class _TaskPageState extends State<TaskPage> {
             padding: EdgeInsets.all(5),
             alignment: Alignment.center,
             
-            child: Text("Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock.",
+            child: Text(tarea.descTarea,
             style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
             decoration: BoxDecoration(
               border: Border.all(color: _colorBorderMain()),
@@ -191,7 +194,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _fechas(){
+  Widget _fechas(TareaModel tarea){
     return Container(
       
       padding: EdgeInsets.only(left:10,right:10),
@@ -215,7 +218,7 @@ class _TaskPageState extends State<TaskPage> {
               padding: EdgeInsets.all(5),
               alignment: Alignment.center,
               
-              child: Text("15/02/20",
+              child: Text(tarea.fechaInicio,
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
                 border: Border.all(color: _colorBorderMain()),
@@ -242,7 +245,7 @@ class _TaskPageState extends State<TaskPage> {
               padding: EdgeInsets.all(5),
               alignment: Alignment.center,
               
-              child: Text("15/02/20",
+              child: Text(tarea.fechaFin,
               style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               decoration: BoxDecoration(
                 border: Border.all(color: _colorBorderMain()),
@@ -256,7 +259,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _atributos(MediaQueryData queryData){
+  Widget _atributos(MediaQueryData queryData, TareaModel tarea){
     return Container(
       
       padding: EdgeInsets.only(left:10,right:10),
@@ -282,7 +285,7 @@ class _TaskPageState extends State<TaskPage> {
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
-                child: Text("Done",
+                child: Text(tarea.estadoTarea,
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color:_colorBorderMain()),
@@ -312,7 +315,7 @@ class _TaskPageState extends State<TaskPage> {
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
-                child: Text("none",
+                child: Text(tarea.requisito,
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color:_colorBorderMain()),
@@ -342,7 +345,7 @@ class _TaskPageState extends State<TaskPage> {
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
-                child: Text("3",
+                child: Text(tarea.esfuerzo,
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color: _colorBorderMain()),
@@ -372,7 +375,7 @@ class _TaskPageState extends State<TaskPage> {
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
-                child: Text("Mucha",
+                child: Text(tarea.urgencia,
                 style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
                 decoration: BoxDecoration(
                   border: Border.all(color: _colorBorderMain()),
@@ -387,14 +390,47 @@ class _TaskPageState extends State<TaskPage> {
         
     );
   }
-  _cuerpo(onof){
+  _cuerpo(onof,_idTarea){
     return Stack(
       children: [
-        _tabla(),
+
+        _recuperarInfo(tareasProvider,_idTarea),
         _opcionesEdicion(onof),
         
       ],
     );
+  }
+   Widget _recuperarInfo(tareasProvider,_idTarea){
+      return FutureBuilder(
+        future: tareasProvider.cargarTareas(),
+        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            TareaModel seleccion;
+            var tareas = snapshot.data;
+              //print(_idProyecto);
+                
+                for(int j=0;j<tareas.length;j++){
+                  if(tareas[j].id==_idTarea){
+                    seleccion=tareas[j];
+                  }
+                }
+
+                return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: 1,
+                itemBuilder: (context,i) => _tabla(seleccion),
+                
+                 
+              );
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
   }
   _opcionesEdicion(bool onof){
     return Visibility(

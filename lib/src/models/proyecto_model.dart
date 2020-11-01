@@ -28,7 +28,7 @@ class ProyectoModel {
     String fechaInicio;
     String fechaFin;
     String wipLimit;
-
+    
     factory ProyectoModel.fromJson(Map<String, dynamic> json) => ProyectoModel(
         id            : json["id"],
         userId        : json["userId"],

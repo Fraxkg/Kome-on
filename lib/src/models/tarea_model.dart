@@ -16,10 +16,10 @@ class TareaModel {
         this.nombre="",
         this.fechaInicio="",
         this.fechaFin="",
-        this.estadoTarea="to-do",
+        this.estadoTarea="To-do",
         this.tipoTarea="análisis",
         this.esfuerzo="",
-        this.urgencia="0",
+        this.urgencia="No",
         this.descTarea="",
         this.requisito='',
     });
