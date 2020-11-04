@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       ],
 //se acaba datepicker
       title: 'Kome on',
-      initialRoute: '/home',
+      initialRoute: '/login',
       routes: {
         '/home'           : ( BuildContext context ) => HomePage(),
         '/project'        : ( BuildContext context ) => ProjectPage(),

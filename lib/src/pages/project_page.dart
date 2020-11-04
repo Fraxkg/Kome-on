@@ -7,6 +7,7 @@ import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
+import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
 
 import 'package:kome_on/src/providers/equipos_provider.dart';
 import 'package:kome_on/src/providers/miembros_provider.dart';
@@ -21,8 +22,13 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-
+  int aux=0;
+  String wip="0";
+  
+  final _prefs= new PreferenciasUsuario();
   MediaQueryData queryData;
+  
+  
   String _idEquipo='';
   final proyectosProvider = new ProyectosProvider();
   final tareasProvider = new TareasProvider();
@@ -33,7 +39,7 @@ class _ProjectPageState extends State<ProjectPage> {
   @override
   Widget build(BuildContext context) {
     String _idProyecto = ModalRoute.of(context).settings.arguments;
-
+    
     print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
@@ -63,7 +69,7 @@ class _ProjectPageState extends State<ProjectPage> {
           
         ]
       ),
-      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto)),
+      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux)),
      
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -105,7 +111,8 @@ class _ProjectPageState extends State<ProjectPage> {
       
     });
   }
-  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto){
+  
+  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux){
     
     return SingleChildScrollView(
           child: Column(
@@ -115,7 +122,7 @@ class _ProjectPageState extends State<ProjectPage> {
           Divider(),
           _verificarEquipo(_idProyecto),
           Divider(),
-          _recuperarInfo(queryData,proyectosProvider,_idProyecto),
+          _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux),
           
           
           Divider(),
@@ -150,7 +157,7 @@ Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto){
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
                 
               );
 
@@ -161,7 +168,7 @@ Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto){
       );
   }
 // in p rogress
-Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto){
+Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux){
       return FutureBuilder(
         future: tareasProvider.cargarTareas(),
         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -170,19 +177,24 @@ Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto){
             List<TareaModel> seleccion=[];
             var tareas = snapshot.data;
               //print(_idProyecto);
-                
+                wip="0";
+                aux=0;
                 for(int j=0;j<tareas.length;j++){
                   if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="In progress"){
                     seleccion.add(tareas[j]);
+                    if(tareas[j].responsable==_prefs.email){
+                      aux=int.parse(wip);
+                      wip=(aux+1).toString();
+                    }
                   }
                 }
-
+                print(wip);
                 return ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
                 
               );
 
@@ -214,7 +226,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i]),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
                 
               );
 
@@ -226,10 +238,12 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
   }
   
 //crear postiti
-  _crearTareas(TareaModel tarea){
+  _crearTareas(TareaModel tarea, _idProyecto){
     List<double> margenes=_numero25();
     double l =margenes[0];
     double r =margenes[1];
+    
+
     return InkWell(
       child: Container(
         height: 100,
@@ -252,13 +266,15 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
         child: Text(tarea.nombre,style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
       ),
       onTap: (){
+        
         String idTarea=tarea.id;
-        Navigator.pushNamed(context, '/task',arguments: idTarea).then((value) => setState((){}));
+        List args=["$idTarea","$wip","$_idProyecto"];
+        Navigator.pushNamed(context, '/task',arguments: args).then((value) => setState((){}));
       },
     );
   }
  //informacion del proyecto
-  Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto){
+  Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux){
       return FutureBuilder(
         future: proyectosProvider.cargarProyectos(),
         builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
@@ -447,7 +463,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto)
+                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto,aux)
                          
                         ],
                       ),
@@ -690,7 +706,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
   } 
   return queryData.size.width/3-10; 
 }
- Future<Null> _handleRefresh() async {
+  Future<Null> _handleRefresh() async {
     await new Future.delayed(new Duration(seconds: 1));
 
     setState(() {

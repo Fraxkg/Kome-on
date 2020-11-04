@@ -11,6 +11,7 @@ class NuevoProyectoPage extends StatefulWidget {
 }
 
 class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
+  
   final formKey = GlobalKey<FormState>();
 
   ProyectoModel proyecto= new ProyectoModel();

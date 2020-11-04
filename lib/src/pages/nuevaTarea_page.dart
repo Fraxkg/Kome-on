@@ -37,11 +37,11 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   List _miembros= ["No asignado"];
   String _opcionSelecMiembros;
 
-  TextEditingController _inputFieldDateController = new TextEditingController();
-  TextEditingController _inputFieldDateController2 = new TextEditingController();
+  // TextEditingController _inputFieldDateController = new TextEditingController();
+  // TextEditingController _inputFieldDateController2 = new TextEditingController();
   
-  String _fechaInicio="";
-  String _fechaFin="";
+  // String _fechaInicio="";
+  // String _fechaFin="";
 
   @override
   Widget build(BuildContext context) {
@@ -601,33 +601,33 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       return lista;
   }
 
-  _selectDate(BuildContext context,seleccion)async{
+  // _selectDate(BuildContext context,seleccion)async{
 
-    DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: new DateTime.now(),
-      firstDate: new DateTime(2019),
-      lastDate: new DateTime(2028),
+  //   DateTime picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: new DateTime.now(),
+  //     firstDate: new DateTime(2019),
+  //     lastDate: new DateTime(2028),
       
-      locale: Locale('es','ES')
-    );
+  //     locale: Locale('es','ES')
+  //   );
 
-    if(picked != null && seleccion==1 ){
-      setState(() {
-        _fechaInicio=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
-        _inputFieldDateController.text = _fechaInicio;
+  //   if(picked != null && seleccion==1 ){
+  //     setState(() {
+  //       _fechaInicio=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
+  //       _inputFieldDateController.text = _fechaInicio;
         
-      });
-    }else if(picked != null && seleccion==2){
-      setState(() {
-        _fechaFin=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
-        _inputFieldDateController2.text = _fechaFin;
+  //     });
+  //   }else if(picked != null && seleccion==2){
+  //     setState(() {
+  //       _fechaFin=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
+  //       _inputFieldDateController2.text = _fechaFin;
         
-      });
-    }
-    // print(_fechaInicio);
-    // print(_fechaFin);
-  }
+  //     });
+  //   }
+  //   // print(_fechaInicio);
+  //   // print(_fechaFin);
+  // }
   Widget _verificarEquipo(String proyectoId){
       
       return FutureBuilder(

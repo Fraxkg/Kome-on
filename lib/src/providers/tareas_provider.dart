@@ -18,6 +18,20 @@ class TareasProvider{
     return true;
   
   }
+  Future<bool>editarTarea(TareaModel tarea)async{
+    final url='$_url/tareas/${tarea.id}.json';
+  
+    final resp = await http.put(url, body: tareaModelToJson(tarea));
+
+    final decodedData=json.decode(resp.body);
+
+    print(decodedData);
+
+    return true;
+  
+  }
+
+
   Future<List<TareaModel>> cargarTareas()async{
     final url='$_url/tareas.json';
     final resp= await http.get(url);
@@ -34,5 +48,12 @@ class TareasProvider{
     });
     //print(proyectos[0].id);
     return tareas;
+  }
+  
+  Future<int> borrarTarea(String id)async{
+    final url= '$_url/tareas/$id.json';
+    final resp = await http.delete(url);
+    print(resp);
+    return 1;
   }
 }

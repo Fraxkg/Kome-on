@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
+import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
+import 'package:kome_on/src/providers/proyectos_provider.dart';
 import 'package:kome_on/src/providers/tareas_provider.dart';
- 
+import 'package:fluttertoast/fluttertoast.dart'; 
+import 'package:intl/intl.dart';
+
 class TaskPage extends StatefulWidget {
   TaskPage({Key key}) : super(key: key);
 
@@ -10,14 +15,24 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  
+
+  TareaModel tareaEdit;
+  ProyectoModel proyecto = new ProyectoModel();
+  final _prefs= new PreferenciasUsuario();
+  String wipLimite='0';
   int _indexNave=0;
   bool _editMode=false;
   final tareasProvider= new TareasProvider();
+  final proyectosProvider = new ProyectosProvider();
   MediaQueryData queryData;
   @override
   Widget build(BuildContext context) {
-    String _idTarea = ModalRoute.of(context).settings.arguments;
-    print(_idTarea);
+    List arguments = ModalRoute.of(context).settings.arguments;
+    String _idTarea =arguments[0];
+    String _wipActual =arguments[1];
+    String _idProyecto =arguments[2];
+    // print(_idTarea+_wipActual);
     queryData = MediaQuery.of(context);
 
     return Scaffold(
@@ -31,14 +46,14 @@ class _TaskPageState extends State<TaskPage> {
             onChanged: (value) {
               setState(() {
                 _editMode = value;
-                print(_editMode);
+                print("modo edicion: "+"$_editMode");
               });
             }
           )
         ]
       ),
       
-      body: _cuerpo(_editMode,_idTarea),
+      body: _cuerpo(_editMode,_idTarea,_wipActual,_idProyecto),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
         canvasColor: Color.fromRGBO(55, 57, 84, 1.0),
@@ -79,7 +94,9 @@ class _TaskPageState extends State<TaskPage> {
       
     });
   }
+  
   Widget _tabla(TareaModel tarea){
+    tareaEdit=tarea;
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -390,49 +407,171 @@ class _TaskPageState extends State<TaskPage> {
         
     );
   }
-  _cuerpo(onof,_idTarea){
-    return Stack(
-      children: [
-
-        _recuperarInfo(tareasProvider,_idTarea),
-        _opcionesEdicion(onof),
+  
+  Widget _cuerpo(onof,_idTarea,_wipActual,_idProyecto){
+    return Column(
+      children: <Widget>[
+        Stack(
+          children: [
+            _verificarWipProyecto(_idTarea,_idProyecto),
+            _recuperarInfo(tareasProvider,_idTarea),
+            _opcionesEdicion(onof,_idTarea),
+            
+          ],
+        ),
         
-      ],
+        
+        _recuperarInfoBtn(tareasProvider,_idTarea,_wipActual),
+      ]
+      
+    ); 
+    
+  }
+  Widget _recuperarInfo(tareasProvider,_idTarea){
+    return FutureBuilder(
+      future: tareasProvider.cargarTareas(),
+      builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+        if(snapshot.hasData){
+          //print("buscar proyectos de"+_idProyecto);
+          TareaModel seleccion;
+          var tareas = snapshot.data;
+            //print(_idProyecto);
+              
+            for(int j=0;j<tareas.length;j++){
+              if(tareas[j].id==_idTarea){
+                seleccion=tareas[j];
+              }
+            }
+            return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            //4 ahorita
+            itemCount: 1,
+            itemBuilder: (context,i) => _tabla(seleccion),
+            
+              
+          );
+
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+      }
     );
   }
-   Widget _recuperarInfo(tareasProvider,_idTarea){
-      return FutureBuilder(
-        future: tareasProvider.cargarTareas(),
-        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
-          if(snapshot.hasData){
-            //print("buscar proyectos de"+_idProyecto);
-            TareaModel seleccion;
-            var tareas = snapshot.data;
-              //print(_idProyecto);
-                
-                for(int j=0;j<tareas.length;j++){
-                  if(tareas[j].id==_idTarea){
-                    seleccion=tareas[j];
-                  }
-                }
+  Widget _recuperarInfoBtn(tareasProvider,_idTarea,_wipActual){
+    return FutureBuilder(
+      future: tareasProvider.cargarTareas(),
+      builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+        if(snapshot.hasData){
+          //print("buscar proyectos de"+_idProyecto);
+          TareaModel seleccion;
+          var tareas = snapshot.data;
+            //print(_idProyecto);
+              
+            for(int j=0;j<tareas.length;j++){
+              if(tareas[j].id==_idTarea){
+                seleccion=tareas[j];
+              }
+            }
+            // tareaEdit=seleccion;
+            return ListView.builder(
+              
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            //4 ahorita
+            itemCount: 1,
+            itemBuilder: (context,i) => _botonAccion(seleccion,_wipActual),
+            
+              
+          );
 
-                return ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                //4 ahorita
-                itemCount: 1,
-                itemBuilder: (context,i) => _tabla(seleccion),
-                
-                 
-              );
-
-          }else{
-            return Center(child: CircularProgressIndicator());
-          }
+        }else{
+          return Center(child: CircularProgressIndicator());
         }
-      );
+      }
+    );
   }
-  _opcionesEdicion(bool onof){
+  
+  Widget _botonAccion(TareaModel tarea,_wipActual){
+    final DateTime now=DateTime.now();
+    final DateFormat formatter =DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(now);
+
+
+    print("la tarea es: "+tarea.estadoTarea);
+    print("wip actual: "+_wipActual);
+    if(tarea.estadoTarea=="To-do"){
+      
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: RaisedButton(
+          
+          padding: EdgeInsets.all(20),
+          child: Text('Aceptar Tarea',style: TextStyle(fontSize: 20),),
+          color: Colors.cyan,
+          textColor: Colors.white,
+          shape: StadiumBorder(),
+          onPressed: (){
+          if(tarea.responsable=="No asignado" || tarea.responsable==_prefs.email){
+            if(int.parse(_wipActual)<int.parse(wipLimite)){
+              tarea.estadoTarea="In progress";    
+              tarea.responsable=_prefs.email;
+              tarea.fechaInicio=formatted;
+              tareasProvider.editarTarea(tarea); 
+              setState(() {
+                
+              });
+            }else{
+              llamarToast("Excediste el wip");
+            }
+          }else{
+           return Container(width: 10,height: 10,);
+          }
+
+        } 
+   ),
+      ); 
+    }else if(tarea.estadoTarea=="In progress"){
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: RaisedButton(
+          
+          padding: EdgeInsets.all(20),
+          child: Text('Finalizar Tarea',style: TextStyle(fontSize: 20),),
+          color: Colors.cyan,
+          textColor: Colors.white,
+          shape: StadiumBorder(),
+          onPressed: (){
+              tarea.fechaFin=formatted;
+              tarea.estadoTarea="Done";    
+              tareasProvider.editarTarea(tarea); 
+              setState(() {
+                
+              });
+           
+            return Container(width: 10,height:10);
+          
+
+        } 
+   ),
+      ); 
+    }else if(tarea.estadoTarea=="Done"){
+      return Container(
+        width: 10,
+        height: 10,
+      );
+    }else{
+      return Container(width: 10,height:10);
+    }
+   
+  }
+  _colorMain(){
+    return Colors.teal[600];
+  }
+  _colorBorderMain(){
+    return Colors.white;
+  }
+  _opcionesEdicion(bool onof,_idTarea){
     return Visibility(
       child: Row(
         
@@ -440,14 +579,15 @@ class _TaskPageState extends State<TaskPage> {
           InkWell(
             child: Container(margin: EdgeInsets.only(left:5, top: 10),width: 50, height:50,child: Icon(Icons.clear_outlined , color: Colors.red,size: 50,)
             ),onTap: (){
-
+              _showMyDialogDelete(context,_idTarea,tareasProvider);
+              
             },
           ),
           InkWell(
             child: Container(margin: EdgeInsets.only(left:1, top: 10),width: 50, height:50,child: Icon(Icons.mode_outlined  , color: Colors.red,size: 45,)
-            
+
             ),onTap: (){
-              
+
             },
           ),
         
@@ -456,12 +596,92 @@ class _TaskPageState extends State<TaskPage> {
       
       visible: onof,
     );
-
+  
   }
-  _colorMain(){
-    return Colors.teal[600];
-  }
-  _colorBorderMain(){
-    return Colors.white;
+  Widget _verificarWipProyecto(String tareaId,_idProyecto){
+    
+    return FutureBuilder(
+      future: proyectosProvider.cargarProyectos(),
+      
+      builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
+        if(snapshot.hasData){
+          
+          final proyecto = snapshot.data;
+          for(int i=0;i<proyecto.length;i++){
+            if(proyecto[i].id==_idProyecto){
+              wipLimite=proyecto[i].wipLimit;
+               
+            }
+          }
+          print("wip limit: "+wipLimite);
+          return Container(
+            height: 10,
+            width:10,
+            child: Text("_idEquipo",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+          );
+          
+        }else{
+          return Center(child: CircularProgressIndicator());
+        
+        }
+      }
+    );
   }
 }
+void _showMyDialogDelete(context,_idTarea,TareasProvider tareasProvider) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text('¡Alerta!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('¿Seguro que deseas eliminar esta tarea?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Eliminar'),
+              onPressed: () {
+                tareasProvider.borrarTarea(_idTarea);
+                
+                Fluttertoast.showToast(
+                    msg: "Tarea eliminada con éxito",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.black.withOpacity(0.6),
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+                Navigator.popUntil(context,ModalRoute.withName('/project'));
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+llamarToast(mensaje){
+  return Fluttertoast.showToast(
+    msg: mensaje,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.black.withOpacity(0.6),
+    textColor: Colors.white,
+    fontSize: 16.0
+);
+}
+
+  
