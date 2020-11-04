@@ -1,5 +1,15 @@
 # kome_on
 
+instalar las dependencias con pubget en caso de que no las reconozca
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------
 A new Flutter project.
 
 ## Getting Started

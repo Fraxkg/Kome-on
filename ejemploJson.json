@@ -1,0 +1,109 @@
+{
+  "equipos" : {
+    "-ML1NEueHC3mT_lC656l" : {
+      "idProyecto" : "-ML1NEpdnSGa6Fp5rzH0"
+    },
+    "-ML1bJhHEtu1QHZRNBWi" : {
+      "idProyecto" : "-ML1bJcVFRlkkKaIGXpX"
+    },
+    "-MLGWneMOng8yNqo_l6Z" : {
+      "idProyecto" : "-MLGWnSNvarydZBIKjCP"
+    }
+  },
+  "miembros" : {
+    "-ML1NEzm2Xw86sQCjBZT" : {
+      "email" : "test@test.com",
+      "equipoId" : "-ML1NEueHC3mT_lC656l",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2"
+    },
+    "-ML1bJmKNDgDiPd7xdPS" : {
+      "email" : "test@test.com",
+      "equipoId" : "-ML1bJhHEtu1QHZRNBWi",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2"
+    },
+    "-MLGWnktncK1v5xJpqBf" : {
+      "email" : "test@test.com",
+      "equipoId" : "-MLGWneMOng8yNqo_l6Z",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2"
+    }
+  },
+  "proyectos" : {
+    "-ML1NEpdnSGa6Fp5rzH0" : {
+      "descripcion" : "Rrfghh",
+      "fechaFin" : "2020/11/28",
+      "fechaInicio" : "2020/11/11",
+      "nombre" : "Fren",
+      "responsable" : "test@test.com",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2",
+      "wipLimit" : "2"
+    },
+    "-ML1bJcVFRlkkKaIGXpX" : {
+      "descripcion" : "sdfsdf",
+      "fechaFin" : "2020/11/27",
+      "fechaInicio" : "2020/11/5",
+      "nombre" : "fsdfsd",
+      "responsable" : "test@test.com",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2",
+      "wipLimit" : "3"
+    },
+    "-MLGWnSNvarydZBIKjCP" : {
+      "descripcion" : "Es un ejemplo",
+      "fechaFin" : "2020/11/28",
+      "fechaInicio" : "2020/11/3",
+      "nombre" : "Ejemplo",
+      "responsable" : "test@test.com",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2",
+      "wipLimit" : "2"
+    }
+  },
+  "tareas" : {
+    "-MLG7C3LUlb5xvQHnwrK" : {
+      "descTarea" : "aaaa",
+      "esfuerzo" : "2",
+      "estadoTarea" : "Done",
+      "fechaFin" : "n/a",
+      "fechaInicio" : "n/a",
+      "id" : "-MLG7C3LUlb5xvQHnwrK",
+      "nombre" : "ejemplo 2",
+      "proyectoId" : "-ML1NEpdnSGa6Fp5rzH0",
+      "requisito" : "Ninguno",
+      "responsable" : "test@test.com",
+      "tipoTarea" : "Diseño",
+      "urgencia" : "No"
+    },
+    "-MLGIR0pzjr_-s2rs4l9" : {
+      "descTarea" : "aaa",
+      "esfuerzo" : "2",
+      "estadoTarea" : "In progress",
+      "fechaFin" : "n/a",
+      "fechaInicio" : "2020-11-04",
+      "id" : "-MLGIR0pzjr_-s2rs4l9",
+      "nombre" : "to do",
+      "proyectoId" : "-ML1NEpdnSGa6Fp5rzH0",
+      "requisito" : "Ninguno",
+      "responsable" : "test@test.com",
+      "tipoTarea" : "Análisis",
+      "urgencia" : "Si"
+    },
+    "-MLGXmrr4S9CeJgc6rCB" : {
+      "descTarea" : "Aaa",
+      "esfuerzo" : "2",
+      "estadoTarea" : "In progress",
+      "fechaFin" : "n/a",
+      "fechaInicio" : "2020-11-03",
+      "id" : "-MLGXmrr4S9CeJgc6rCB",
+      "nombre" : "Aaa",
+      "proyectoId" : "-MLGWnSNvarydZBIKjCP",
+      "requisito" : "actividad 1",
+      "responsable" : "test@test.com",
+      "tipoTarea" : "Programación",
+      "urgencia" : "Si"
+    }
+  },
+  "usuarios" : {
+    "id01" : {
+      "nombre" : "",
+      "userId" : "sdasdadqwverc23nrt"
+    }
+  }
+}
