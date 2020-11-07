@@ -39,6 +39,7 @@ class EquiposProvider{
     final List<EquipoModel> equipos = new List();
     
     if(decodedData == null) return [];
+    
     decodedData.forEach((id, equipo) {
       
       final equipoTemp = EquipoModel.fromJson(equipo);

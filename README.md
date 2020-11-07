@@ -2,6 +2,8 @@
 
 instalar las dependencias con pubget en caso de que no las reconozca
 
+esta en modo prueba, si es la primera vez que usan la app en initial route del main.dart pongan "/login" enves de "/home"
+
 
 
 

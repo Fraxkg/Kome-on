@@ -18,6 +18,19 @@ class MiembrosProvider{
     return true;
   
   }
+  Future<bool>agregarMiembroNuevo(MiembroModel equipo)async{
+    final url='$_url/miembros.json';
+  
+    final resp = await http.post(url, body: miembroModelToJson(equipo));
+
+    final decodedData=json.decode(resp.body);
+
+    print(decodedData["name"]);
+    
+
+    return true;
+  
+  }
   Future<List<MiembroModel>> cargarMiembro()async{
     final url='$_url/miembros.json';
     final resp= await http.get(url);

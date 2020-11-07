@@ -629,49 +629,50 @@ class _TaskPageState extends State<TaskPage> {
   }
 }
 void _showMyDialogDelete(context,_idTarea,TareasProvider tareasProvider) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          title: Text('¡Alerta!'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('¿Seguro que deseas eliminar esta tarea?'),
-              ],
-            ),
+  showDialog(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        title: Text('¡Alerta!'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('¿Seguro que deseas eliminar esta tarea?'),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Eliminar'),
-              onPressed: () {
-                tareasProvider.borrarTarea(_idTarea);
-                
-                Fluttertoast.showToast(
-                    msg: "Tarea eliminada con éxito",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.black.withOpacity(0.6),
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-                Navigator.popUntil(context,ModalRoute.withName('/project'));
-              },
-            ),
-          ],
-        );
-      }
-    );
-  }
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Eliminar'),
+            onPressed: () {
+              tareasProvider.borrarTarea(_idTarea);
+              
+              Fluttertoast.showToast(
+                  msg: "Tarea eliminada con éxito",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black.withOpacity(0.6),
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              Navigator.popUntil(context,ModalRoute.withName('/project'));
+            },
+          ),
+        ],
+      );
+    }
+  );
+}
+
 llamarToast(mensaje){
   return Fluttertoast.showToast(
     msg: mensaje,

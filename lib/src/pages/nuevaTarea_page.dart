@@ -26,16 +26,19 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   final equiposProvider = new EquiposProvider();
   final tareaProvider = new TareasProvider();
   final miembroProvider = new MiembrosProvider();
+
   String tipo='Diseño';
-  String requisito='Ninguno';
-  List _tipos= ['Diseño', 'Análisis','Programación','a','Libre'];
-  List _requisitos= ['Ninguno','actividad 1', 'actividad 2'];
   String _opcionSelecTipos;
+  List _tipos= ['Diseño', 'Análisis','Programación','a','Libre'];
+
+  String requisito='Ninguno';
+  List _requisitos= ['Ninguno'];
   String _opcionSelecRequisitos;
 
   String miembro="No asignado";
   List _miembros= ["No asignado"];
   String _opcionSelecMiembros;
+
 
   // TextEditingController _inputFieldDateController = new TextEditingController();
   // TextEditingController _inputFieldDateController2 = new TextEditingController();
@@ -74,7 +77,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
                     Icon(Icons.graphic_eq_outlined),
                     SizedBox(width:20),
                     _crearTipo(),
-                    _crearRequisito()
+                    _obtenerTareas(_idProyecto)
                   ],
                 ),
                 SizedBox(height: 20),
@@ -120,6 +123,46 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       ),
        
     );
+  }
+  Widget _obtenerTareas(_idProyecto){
+    return FutureBuilder(
+        future: tareaProvider.cargarTareas(),
+        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+          if(snapshot.hasData){
+            //print("buscar proyectos de"+_idProyecto);
+            //MiembroModel seleccion;
+            var tareas = snapshot.data;
+              //print(_idProyecto);
+                
+                //print(_idEquipo);
+                _requisitos=["No asignado"];
+                for(int j=0;j<tareas.length;j++){
+                  if(tareas[j].proyectoId==_idProyecto){
+                   // print("si entra");
+                    
+                    
+                    _requisitos.add(tareas[j].nombre);
+                   
+                  }
+                }
+                // print("aaaa"+miembro);
+                // print(_miembros);
+                Future.delayed(const Duration(milliseconds: 500), () {
+
+// Here you can write your code
+
+                  setState(() {
+                    // Here you can write your code for open new view
+                  });
+
+                });
+                return _crearRequisito();
+
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      );
   }
   Widget _obtenerMiembros(){
     return FutureBuilder(
@@ -178,64 +221,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       ]
     );
   }
-  // Widget _crearFechaInicio() {
-  //   return TextFormField(
-  //     enableInteractiveSelection: false,
-  //     controller: _inputFieldDateController,
-  //     decoration: InputDecoration(
-  //       border: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(20.0)
-  //       ),
-  //       hintText: 'Fecha de Inicio',
-  //       labelText: 'Fecha de Inicio',
-  //       suffixIcon: Icon(Icons.calendar_today_outlined),
-  //       icon: Icon(Icons.calendar_today)
-  //     ),
-  //     onSaved: (value)=>tarea.fechaInicio=value,
-  //     validator: (value){
-  //       if(value.length<3){
-  //         return 'Ingrese una fecha válida';
-  //       }else{
-  //         return null;
-  //       }},
-  //     onTap: () {
-  //       FocusScope.of(context).requestFocus(new FocusNode());
-  //       _selectDate(context,1);
-  
-  //     },
-  //   );
-  // }
-
-  // Widget _crearFechaFin() {
-  //   return TextFormField(
-  //     enableInteractiveSelection: false,
-  //     controller: _inputFieldDateController2,
-  //     decoration: InputDecoration(
-  //       border: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(20.0)
-  //       ),
-  //       hintText: 'Fecha de Finalización',
-  //       labelText: 'Fecha de Finalización',
-  //       suffixIcon: Icon(Icons.calendar_today_outlined),
-  //       icon: Icon(Icons.calendar_today)
-  //     ),
-  //     onSaved: (value)=>tarea.fechaFin=value,
-  //     validator: (value){
-  //       if(value.length<3){
-  //         return 'Ingrese una fecha válida';
-  //       }
-  //       else{
-  //         return null;
-  //       }},
-  //     onTap: () {
-  //       FocusScope.of(context).requestFocus(new FocusNode());
-  //       _selectDate(context,2);
-  
-  //     },
-  //   );
-  // }
-  
-
+ 
   Widget _crearTipo(){
     return Container(
       
@@ -601,33 +587,9 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
       return lista;
   }
 
-  // _selectDate(BuildContext context,seleccion)async{
+ 
 
-  //   DateTime picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: new DateTime.now(),
-  //     firstDate: new DateTime(2019),
-  //     lastDate: new DateTime(2028),
-      
-  //     locale: Locale('es','ES')
-  //   );
-
-  //   if(picked != null && seleccion==1 ){
-  //     setState(() {
-  //       _fechaInicio=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
-  //       _inputFieldDateController.text = _fechaInicio;
-        
-  //     });
-  //   }else if(picked != null && seleccion==2){
-  //     setState(() {
-  //       _fechaFin=picked.year.toString()+"/"+picked.month.toString()+"/"+picked.day.toString();
-  //       _inputFieldDateController2.text = _fechaFin;
-        
-  //     });
-  //   }
-  //   // print(_fechaInicio);
-  //   // print(_fechaFin);
-  // }
+  
   Widget _verificarEquipo(String proyectoId){
       
       return FutureBuilder(

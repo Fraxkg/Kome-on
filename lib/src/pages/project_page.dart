@@ -3,12 +3,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
 import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
-
+import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:kome_on/src/providers/equipos_provider.dart';
 import 'package:kome_on/src/providers/miembros_provider.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
@@ -28,7 +29,6 @@ class _ProjectPageState extends State<ProjectPage> {
   final _prefs= new PreferenciasUsuario();
   MediaQueryData queryData;
   
-  
   String _idEquipo='';
   final proyectosProvider = new ProyectosProvider();
   final tareasProvider = new TareasProvider();
@@ -47,11 +47,12 @@ class _ProjectPageState extends State<ProjectPage> {
         title: Text("$_idProyecto"),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
+         
           InkWell(
             onLongPress: (){
               
             },
-            child: Icon(Icons.note_add,size: 38,),
+            child: Icon(FlutterIcons.addfile_ant,size: 38,),
             onTap: (){
               Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
               
@@ -60,9 +61,9 @@ class _ProjectPageState extends State<ProjectPage> {
             onLongPress: (){
               
             },
-            child: Icon(Icons.supervised_user_circle,size: 38,),
+            child: Icon(FlutterIcons.user_plus_fea,size: 38,),
             onTap: (){
-              
+              _invitarMiembros(context, _idEquipo);
               
             },
           ),
@@ -236,7 +237,6 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
         }
       );
   }
-  
 //crear postiti
   _crearTareas(TareaModel tarea, _idProyecto){
     List<double> margenes=_numero25();
@@ -247,7 +247,6 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
     return InkWell(
       child: Container(
         height: 100,
-        
         margin: EdgeInsets.only(left:l, top: 5, bottom: 5,right:r),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -318,13 +317,15 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
         builder: (BuildContext context, AsyncSnapshot<List<MiembroModel>> snapshot){
           if(snapshot.hasData){
             //print("buscar proyectos de"+_idProyecto);
-            MiembroModel seleccion;
+           List<MiembroModel> seleccion=[];
+            
             var miembros = snapshot.data;
               //print(_idProyecto);
                 
                 for(int j=0;j<miembros.length;j++){
                   if(miembros[j].equipoId==_idEquipo){
-                    seleccion=miembros[j];
+                    seleccion.add(miembros[j]);
+                    
                   }
                 }
 
@@ -332,8 +333,8 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
                  physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 //4 ahorita
-                itemCount: 1,
-                itemBuilder: (context,i) => _nombreMiembros(seleccion),
+                itemCount: seleccion.length,
+                itemBuilder: (context,i) => _nombreMiembros(seleccion[i]),
                 
                  
               );
@@ -344,6 +345,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
         }
       );
   }
+  
   Widget _generarInfo(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
     //print(proyecto.nombre+"si entro");
     return Container(
@@ -383,7 +385,6 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
     );
   }
  
-  
   Widget _tablero(_idProyecto){
     return Container(
       margin: EdgeInsets.only(left:5, top: 10, bottom: 10,right:5),
@@ -549,6 +550,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       ),
     );
   }
+  
   Widget _conclusion(fechaFin){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -575,6 +577,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       ),
     );
   }
+  
   Widget _limit(wip){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -601,6 +604,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       ),
     );
   }
+  
   Widget _colaboradores(){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -631,9 +635,11 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       ),
     );
   }
+  
   Widget _nombreMiembros(MiembroModel miembro){
     return Text(miembro.email,style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center);
   }
+  
   Widget _actividad(){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -666,6 +672,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
       ),
     );
   }
+  
   Widget _estadisticas(){
     return Container(
       width:getMediaWidth(queryData.size.width),
@@ -723,6 +730,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
     var margen=[numero1,numero2];
     return margen;
   }
+
   Widget _verificarEquipo(String proyectoId){
     
     return FutureBuilder(
@@ -754,3 +762,45 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
   }
 
 }
+void _invitarMiembros(context,_idEquipo) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text('Invita gente a participar en tu proyecto'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Asegurate de que tus compañeros tengan este código: \n'),
+                Center(
+                  child: SelectableText(
+                    
+                    _idEquipo,
+                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+                )
+                )
+                
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            InkWell(
+              child:Icon(FlutterIcons.clipboard_fea,size: 30),
+              onTap: (){
+                ClipboardManager.copyToClipBoard("$_idEquipo");
+              }
+            ),
+            TextButton(
+              child: Text('Aceptar',style: TextStyle(fontSize: 20)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
