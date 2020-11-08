@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   MediaQueryData queryData;
   @override
   Widget build(BuildContext context) {
+    
      RegExp regExp   = new RegExp(pattern);
     queryData = MediaQuery.of(context);
     return WillPopScope(

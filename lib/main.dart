@@ -21,6 +21,7 @@ Future<void>main()async{
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
+  final prefs = new PreferenciasUsuario();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       ],
 //se acaba datepicker
       title: 'Kome on',
-      initialRoute: '/login',
+      initialRoute: '/home',
       routes: {
         '/home'           : ( BuildContext context ) => HomePage(),
         '/project'        : ( BuildContext context ) => ProjectPage(),

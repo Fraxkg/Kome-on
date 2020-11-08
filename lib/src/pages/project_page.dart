@@ -8,6 +8,7 @@ import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
+import 'package:kome_on/src/pages/task_page.dart';
 import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:kome_on/src/providers/equipos_provider.dart';
@@ -791,6 +792,7 @@ void _invitarMiembros(context,_idEquipo) {
               child:Icon(FlutterIcons.clipboard_fea,size: 30),
               onTap: (){
                 ClipboardManager.copyToClipBoard("$_idEquipo");
+                llamarToast("Código copiado en el portapapeles");
               }
             ),
             TextButton(
