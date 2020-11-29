@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kome_on/src/models/desarrollador_model.dart';
 import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
+import 'package:kome_on/src/providers/desarrolladores_provider.dart';
 import 'package:kome_on/src/providers/equipos_provider.dart';
 import 'package:kome_on/src/providers/miembros_provider.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
@@ -22,10 +24,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   
   final proyectosProvider = new ProyectosProvider();
+  final desarrolladorProvider = new DesarrolladorProvider();
   final equiposProvider = new EquiposProvider();
   final miembrosProvider = new MiembrosProvider();
 
   // String _nombreUsuario="Francisco Sánchez";
+  // bool flagRefreshData=false;
+  // bool flagRefreshDataProyect=false;
+  String urlAvatar='https://avatars1.githubusercontent.com/u/44996719?v=4';
   bool flagCodigoValido=false;
   bool flagCodigoExiste=false;
   bool _firstRun=false;
@@ -35,53 +41,13 @@ class _HomePageState extends State<HomePage> {
   MediaQueryData queryData;
   int _indexNave =0;
   
-  final appBars=[
-    AppBar(
-        elevation: 20,
-        title: Text("Proyectos"),
-        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
-        actions: <Widget>[
-          
-          Container(
-            margin: EdgeInsets.only(right: 10.0),
-            child: CircleAvatar(
-            
-              child: Icon(Icons.account_circle,color: Colors.black,),
-              backgroundColor: Colors.white,
-            ),
-          )
-        ]
-      ),
-    AppBar(
-        elevation: 20,
-        title: Text("Desarrolladores"),
-        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
-        actions: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 10.0),
-            child: CircleAvatar(
-            
-              child: Icon(Icons.account_circle,color: Colors.black,),
-              backgroundColor: Colors.white,
-            ),
-          )
-        ]
-      ),
-      AppBar(
-        elevation: 20,
-        title: Text("Historias"),
-        backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
-        actions: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 10.0),
-            child: CircleAvatar(
-            
-              child: Icon(Icons.account_circle,color: Colors.black,),
-              backgroundColor: Colors.white,
-            ),
-          )
-        ]
-      ),
+  final tabsTitle=[
+    Text("Proyectos"),
+     
+    Text("Desarrolladores"),
+        
+    Text("Historias"),
+       
   ];
 
   
@@ -105,6 +71,12 @@ class _HomePageState extends State<HomePage> {
     // final userEmail=userInfo[1];
     // print(userId+userEmail);
     final _prefs= new PreferenciasUsuario();
+    @override
+  //   void initState(){
+  //   super.initState();
+  //   _obtenerEquipos(queryData,miembrosProvider,_prefs.userId)
+  //                 _obtenerProyectos(queryData,equiposProvider)  
+  // }
     // print("-------------------home");
     // print("desde preferencias");
     // print(_prefs.userId); print(_prefs.email);
@@ -116,54 +88,105 @@ class _HomePageState extends State<HomePage> {
    
     queryData = MediaQuery.of(context);
     var floatingButton=[
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children:<Widget>[
+        FloatingActionButton(
+          backgroundColor: Colors.pink[300],
+          child: Icon(FlutterIcons.refresh_ccw_fea),
+          onPressed: (){
+            print("refresh");
+            
+            setState(() {});
+          },
+        ),
+        
+        FloatingActionButton(
+          heroTag: "btnProyectoNuevo",
+          backgroundColor: Colors.pink[300],
+          child: Icon(Icons.add_circle_outline_outlined),
+          onPressed: (){
+            List args=["$userId","$userEmail"];
+            Navigator.pushNamed(context, '/nuevoProyecto',arguments: args).then((value) => setState((){}));
+          
+          },
+        ),
+        ] 
+      ),
       FloatingActionButton(
-            backgroundColor: Colors.pink[300],
-            child: Icon(Icons.add_circle_outline_outlined),
-            onPressed: (){
-              List args=["$userId","$userEmail"];
-              Navigator.pushNamed(context, '/nuevoProyecto',arguments: args).then((value) => setState((){}));
-             
-            },
-          ),
-      Container(),
+          backgroundColor: Colors.pink[300],
+          child: Icon(FlutterIcons.refresh_ccw_fea),
+          onPressed: (){
+            print("refresh");
+            
+            setState(() {});
+          },
+        ),
       Container(),
     ];
   
     var tabsBody=[
-   
-      RefreshIndicator(
-      onRefresh: _handleRefresh,
-      child: _crearTablero(queryData,proyectosProvider)
+         
+    _crearTablero(queryData,proyectosProvider),
 
-    ),
-        
     //Inicio de home        //
     //_cardPostick(queryData,context),
     
-      
     //inicio de desar
-    Container(child: Text('Desarrolladores')),
+    _crearTableroDevs(queryData,desarrolladorProvider),
       //Inicio de historias
     Center(child: Text('Historias')),
     ];
     
     return WillPopScope(
       onWillPop: ()async=>false,
-          child: Container(
+        child: Container(
         width:double.infinity,
         height: double.infinity,
         
         child: Scaffold(
             backgroundColor: Colors.grey[100],
-            appBar: appBars[_indexNave],
+            appBar: AppBar(
+            elevation: 20,
+            title: tabsTitle[_indexNave],
+            backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
+            actions: <Widget>[
+              
+              Container(
+                margin: EdgeInsets.only(right: 10.0),
+                child: InkWell(
+                  child: CircleAvatar(
+
+                   
+                    child: ClipRRect(
+          
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: FadeInImage(
+                      image: NetworkImage(urlAvatar,),
+                      
+                      placeholder: AssetImage("assets/loading.gif"),
+                      fadeInDuration: Duration( milliseconds: 200 ),
+                      fit: BoxFit.cover,
+                    )
+                    ),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/editarPerfil').then((value) => setState((){}));
+                  },
+                ),
+              )
+            ]
+          ),
             
             drawer: Drawer(
               child: _hamList(_prefs)
             ),
             
             body:SingleChildScrollView(
-                        child: Column(
+              child: Column(
                 children: <Widget>[
+                  _obtenerAvatar(desarrolladorProvider,userId),
                   _obtenerEquipos(queryData,miembrosProvider,_prefs.userId),
                   _obtenerProyectos(queryData,equiposProvider),  
                   tabsBody[_indexNave],
@@ -186,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                     
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.business),
+                    icon: Icon(Icons.supervised_user_circle),
                     label: 'Desarrolladores',
                     
                   ),
@@ -213,57 +236,58 @@ class _HomePageState extends State<HomePage> {
       
     });
   }
-  Future<Null> _handleRefresh() async {
-    await new Future.delayed(new Duration(seconds: 1));
+  // Future<Null> _handleRefresh() async {
+  //   await new Future.delayed(new Duration(seconds: 1));
 
-    setState(() {
+  //   setState(() {
       
-    });
+  //   });
 
-    return null;
-  }
-Widget _hamList(_prefs){
-  return ListView(
-    children: <Widget>[
-      DrawerHeader(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: <Color>[
-               Color.fromRGBO(63, 63, 156, 1.0),
-            Color.fromRGBO(90, 70, 178, 1.0)
-            ]
-          )
-        ),
-        child: Container(
-          child: Column(
-            children: [
-              
-              FadeInImage(placeholder: AssetImage("assets/placeholder.png"), image: AssetImage("assets/placeholder.png"),width: 100,height:100,),
-              Text("Hola, "+_prefs.email,style: TextStyle(color: Colors.white,fontSize: 20)),
-            ],
+  //   return null;
+  // }
+  Widget _hamList(_prefs){
+    return ListView(
+      children: <Widget>[
+        DrawerHeader(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: <Color>[
+                Color.fromRGBO(63, 63, 156, 1.0),
+              Color.fromRGBO(90, 70, 178, 1.0)
+              ]
+            )
           ),
-        ) 
-      ),
-      ListTile(
-        leading: Icon(FlutterIcons.page_add_fou,color: Colors.black,),
-        title: Text('Agregar proyecto existente',style: TextStyle(fontSize: 16),),
-        onTap: (){
-          _unirseGrupoDialog(context,_prefs);
-        },
-      ),
-      Divider(color: Colors.black,),
-      ListTile(
-        leading: Icon(FlutterIcons.log_out_ent,color: Colors.black,),
-        title: Text('Cerrar Sesión',style: TextStyle(fontSize: 16),),
-        onTap: (){
-          Navigator.pushReplacementNamed(context, "/login");
-          
-        },
-      ),
-      Divider(color: Colors.black,),
-    ],
-  );
-}
+          child: Container(
+            child: Column(
+              children: [
+                
+                FadeInImage(placeholder: AssetImage("assets/placeholder.png"), image: AssetImage("assets/placeholder.png"),width: 100,height:100,),
+                Text("Hola, "+_prefs.email,style: TextStyle(color: Colors.white,fontSize: 20)),
+              ],
+            ),
+          ) 
+        ),
+        ListTile(
+          leading: Icon(FlutterIcons.page_add_fou,color: Colors.black,),
+          title: Text('Agregar proyecto existente',style: TextStyle(fontSize: 16),),
+          onTap: (){
+            _unirseGrupoDialog(context,_prefs);
+          },
+        ),
+        Divider(color: Colors.black,),
+        ListTile(
+          leading: Icon(FlutterIcons.log_out_ent,color: Colors.black,),
+          title: Text('Cerrar Sesión',style: TextStyle(fontSize: 16),),
+          onTap: (){
+            Navigator.pushReplacementNamed(context, "/login");
+            
+          },
+        ),
+        Divider(color: Colors.black,),
+      ],
+    );
+  }
+
 void _unirseGrupo(String idEquipo,_prefs){
   
   // final String _url="https://kome-on.firebaseio.com/equipos/$idEquipo.json";
@@ -353,41 +377,88 @@ void _unirseGrupoDialog(context,_prefs) {
       }
     );
   }
-Widget _obtenerEquipos(queryData,MiembrosProvider miembrosProvider,userId){
+  Widget _obtenerAvatar(DesarrolladorProvider desarrolladorProvider,userId){
+    print("wasting data");
+    
+    return FutureBuilder(
+      
+      future: desarrolladorProvider.cargarDesarrollador(),
+      builder: (BuildContext context, AsyncSnapshot<List<DesarrolladorModel>> snapshot){
+        if(snapshot.hasData){
+          
+          final miembro = snapshot.data;
+            for(int j=0;j<miembro.length;j++){
 
-  return FutureBuilder(
-    future: miembrosProvider.cargarMiembro(),
-    builder: (BuildContext context, AsyncSnapshot<List<MiembroModel>> snapshot){
-      if(snapshot.hasData){
-        equipos=[];
-        final miembro = snapshot.data;
-          for(int j=0;j<miembro.length;j++){
+              if(miembro[j].userId==userId){
+               urlAvatar=miembro[j].perfilUrl;
+              }
+          }
+        //  print("2"+"$equipos");
+          return Container(
+            height: 1,
+          );
+          
+        }else{
+          return Container(
+            height: 1,
 
-            allEquipos.add(miembro[j].equipoId);
-            
-            if(miembro[j].userId==userId){
-              equipos.add(miembro[j].equipoId);
-            }
+          );
+
         }
-        print(equipos);
-        return Container(
-          height: 1,
-        );
-        
-      }else{
-        return Container(
-          height: 1,
-
-        );
-
       }
-    }
-  );
+    );
+    
+  
+  
+}
+Widget _obtenerEquipos(queryData,MiembrosProvider miembrosProvider,userId){
+    print("wasting data");
+    
+    return FutureBuilder(
+      
+      future: miembrosProvider.cargarMiembro(),
+      builder: (BuildContext context, AsyncSnapshot<List<MiembroModel>> snapshot){
+        if(snapshot.hasData){
+          equipos=[];
+          final miembro = snapshot.data;
+            for(int j=0;j<miembro.length;j++){
+
+              allEquipos.add(miembro[j].equipoId);
+              
+              if(miembro[j].userId==userId){
+                equipos.add(miembro[j].equipoId);
+              }
+          }
+        //  print("2"+"$equipos");
+          return Container(
+            height: 1,
+          );
+          
+        }else{
+          return Container(
+            height: 1,
+
+          );
+
+        }
+      }
+    );
+    
+  
+  
 }
 
 Widget _obtenerProyectos(queryData,EquiposProvider equiposProvider){
-  
-  return FutureBuilder(
+  Future.delayed(const Duration(seconds: 2), () {
+
+// Here you can write your code
+
+                  setState(() {
+                    // Here you can write your code for open new view
+                  });
+
+                });
+     return FutureBuilder(
     future: equiposProvider.cargarEquipo(),
     builder: (BuildContext context, AsyncSnapshot<List<EquipoModel>> snapshot){
       if(snapshot.hasData){
@@ -401,7 +472,7 @@ Widget _obtenerProyectos(queryData,EquiposProvider equiposProvider){
             }
             
           }
-        print(proyectos);
+        //print(proyectos);
         return Container(
           height: 1,
         );
@@ -415,6 +486,8 @@ Widget _obtenerProyectos(queryData,EquiposProvider equiposProvider){
       }
     }
   );
+  
+ 
 }
 Widget _crearTablero(queryData,proyectosProvider){
   
@@ -436,7 +509,7 @@ Widget _crearTablero(queryData,proyectosProvider){
             }
             }
           }
-              Future.delayed(const Duration(milliseconds: 500), () {
+              Future.delayed(const Duration(seconds: 2), () {
 
 // Here you can write your code
 
@@ -472,14 +545,100 @@ Widget _crearTablero(queryData,proyectosProvider){
       }
     );
 }
+Widget _crearTableroDevs(queryData,desarrolladorProvider){
+  
+    return FutureBuilder(
+      
+      future: desarrolladorProvider.cargarDesarrollador(),
+      builder: (BuildContext context, AsyncSnapshot<List<DesarrolladorModel>> snapshot){
+        
+        if(snapshot.hasData){
+          
+          final devs = snapshot.data;
+
+              
+              return GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: devs.length,
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                
+                crossAxisCount: 2,
+                childAspectRatio: .7,
+              ),
+              itemBuilder: (context, i) =>_devs(queryData,context,devs[i]),
+            );
+          
+        }else{
+          return Column(
+            children:<Widget>[
+              Center(
+              child: CircularProgressIndicator()
+              ),
+              Text("Cargando...")
+            ]
+              
+          );
+
+        }
+      }
+    );
 }
+}
+//widget tablero de devs
+Widget _devs(queryData,context,DesarrolladorModel dev){
+  
+  return Container(
+    margin: EdgeInsets.all(5),
+    child:Column(
+      children:<Widget>[
+        Container( 
+          
+          child: ClipRRect(
 
-
-
-
-
-
- 
+            borderRadius: BorderRadius.circular(20.0),
+            child: FadeInImage(
+            image: NetworkImage(dev.perfilUrl),
+            
+            placeholder: AssetImage("assets/loading.gif"),
+            fadeInDuration: Duration( milliseconds: 200 ),
+            fit: BoxFit.cover,
+            )
+          ),
+        
+        ),
+        Text(
+          dev.correo,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: Colors.blue),
+        ),
+        Text(
+          dev.nombre,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
+          
+        ),
+        Row(
+          mainAxisAlignment:MainAxisAlignment.center,
+          children: <Widget>[
+          
+          Text(
+          dev.apePaterno+" ",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
+          
+        ),
+        Text(
+          dev.apeMaterno,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
+          
+        )
+        ],)
+      ]
+    )
+  );
+}
 //Wdiget creacion de proyectos
 Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
 

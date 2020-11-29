@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:kome_on/src/models/equipo_model.dart';
@@ -10,7 +11,6 @@ import 'package:kome_on/src/models/proyecto_model.dart';
 import 'package:kome_on/src/models/tarea_model.dart';
 import 'package:kome_on/src/pages/task_page.dart';
 import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
-import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:kome_on/src/providers/equipos_provider.dart';
 import 'package:kome_on/src/providers/miembros_provider.dart';
 import 'package:kome_on/src/providers/proyectos_provider.dart';
@@ -41,11 +41,11 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     String _idProyecto = ModalRoute.of(context).settings.arguments;
     
-    print(_idProyecto);
+    //print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("$_idProyecto"),
+        title: SingleChildScrollView(child: Text("$_idProyecto")),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
          
@@ -117,7 +117,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux){
     
     return SingleChildScrollView(
-          child: Column(
+      child: Column(
         children: [
           
           _tablero(_idProyecto),
@@ -238,32 +238,97 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
         }
       );
   }
+
 //crear postiti
-  _crearTareas(TareaModel tarea, _idProyecto){
+_crearTareas(TareaModel tarea, _idProyecto){
     List<double> margenes=_numero25();
+    Color mainColor=Colors.yellow[200];
+    Color borderColor=Colors.white;
+    Color shadowColor=Colors.grey;
     double l =margenes[0];
     double r =margenes[1];
-    
+    bool flagUrgencia=true;
+
+   
+
+///si es urgencia
+    if(tarea.urgencia=="No"){
+      flagUrgencia=false;
+    }
+  ////colores por tarea
+    if(tarea.tipoTarea=="Análisis"){
+      mainColor=Colors.green[200];
+  ///color si es tuyo
+      if(tarea.responsable==_prefs.email){
+        borderColor=Colors.green[700];
+        shadowColor=Colors.green[700];
+      }
+
+    }else if(tarea.tipoTarea=="Diseño"){
+      mainColor=Colors.yellow[200];
+      ///color si es tuyo
+      if(tarea.responsable==_prefs.email){
+        borderColor=Colors.orangeAccent[700];
+        shadowColor=Colors.orangeAccent[700];
+      }
+
+    }else if(tarea.tipoTarea=="Código"){
+      mainColor=Colors.red[200];
+      ///color si es tuyo
+      if(tarea.responsable==_prefs.email){
+        borderColor=Colors.redAccent[700];
+        shadowColor=Colors.redAccent[700];
+      }
+
+    }else if(tarea.tipoTarea=="Mantenimiento"){
+      mainColor=Colors.blue[200];
+      ///color si es tuyo
+      if(tarea.responsable==_prefs.email){
+        borderColor=Colors.blueAccent[700];
+        shadowColor=Colors.blueAccent[700];
+      }
+
+    }else{
+      mainColor=Colors.yellow[200];
+    }
 
     return InkWell(
-      child: Container(
-        height: 100,
-        margin: EdgeInsets.only(left:l, top: 5, bottom: 5,right:r),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border.all(color:_colorBorderMain()),
-          borderRadius: BorderRadius.zero,
-          color: Colors.yellow[200],
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0.0, 3.0), //(x,y)
-              blurRadius: 6.0,
-            ),
-          ],
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: 100,
+            margin: EdgeInsets.only(left:l, top: 5, bottom: 5,right:r),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color:borderColor),
+              borderRadius: BorderRadius.zero,
+              color: mainColor,
+              boxShadow: [
+                BoxShadow(
+                  color: shadowColor,
+                  offset: Offset(0.0, 3.0), //(x,y)
+                  blurRadius: 6.0,
+                ),
+              ],
 
-        ),
-        child: Text(tarea.nombre,style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+            ),
+            child: Text(tarea.nombre,style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+          ),
+          
+              
+              Center(
+                child: Container(
+                  padding:EdgeInsets.only(top:75),
+                  margin: EdgeInsets.only(left:l,right:r),
+                  child: Visibility(
+                    child: Icon(FlutterIcons.warning_ent, color: Colors.red,),
+                    visible: flagUrgencia,
+                  ),
+                ),
+              )
+            
+          
+        ]
       ),
       onTap: (){
         
@@ -788,19 +853,21 @@ void _invitarMiembros(context,_idEquipo) {
             ),
           ),
           actions: <Widget>[
-            InkWell(
-              child:Icon(FlutterIcons.clipboard_fea,size: 30),
-              onTap: (){
-                ClipboardManager.copyToClipBoard("$_idEquipo");
-                llamarToast("Código copiado en el portapapeles");
-              }
-            ),
             TextButton(
-              child: Text('Aceptar',style: TextStyle(fontSize: 20)),
+              child: Text('Cancelar',style: TextStyle(fontSize: 20)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
+            InkWell(
+              child:Icon(FlutterIcons.clipboard_fea,size: 30),
+              onTap: (){
+               // ClipboardManager.copyToClipBoard("$_idEquipo");
+                 FlutterClipboard.copy('$_idEquipo');
+                llamarToast("Código copiado en el portapapeles");
+              }
+            ),
+           
           ],
         );
       }

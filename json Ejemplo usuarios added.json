@@ -1,0 +1,50 @@
+{
+  "equipos" : {
+    "-ML1NEueHC3mT_lC656l" : {
+      "idProyecto" : "-ML1NEpdnSGa6Fp5rzH0"
+    }
+  },
+  "miembros" : {
+    "-ML1NEzm2Xw86sQCjBZT" : {
+      "email" : "test@test.com",
+      "equipoId" : "-ML1NEueHC3mT_lC656l",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2"
+    }
+  },
+  "proyectos" : {
+    "-ML1NEpdnSGa6Fp5rzH0" : {
+      "descripcion" : "Rrfghh",
+      "fechaFin" : "2020/11/28",
+      "fechaInicio" : "2020/11/11",
+      "nombre" : "Fren",
+      "responsable" : "test@test.com",
+      "userId" : "hkqLgX0HImTkeFSLjP8oSQD4Hzd2",
+      "wipLimit" : "2"
+    }
+  },
+  "tareas" : {
+    "-MLp7nuP6CI5Oez-iDpz" : {
+      "descTarea" : "siuuuu",
+      "esfuerzo" : "2",
+      "estadoTarea" : "To-do",
+      "fechaFin" : "n/a",
+      "fechaInicio" : "n/a",
+      "nombre" : "123456 789012345 67890",
+      "proyectoId" : "-ML1NEpdnSGa6Fp5rzH0",
+      "requisito" : "No asignado",
+      "responsable" : "No asignado",
+      "tipoTarea" : "Código",
+      "urgencia" : "Si"
+    }
+  },
+  "usuarios" : {
+    "-MNBseKj5jOSozsDkS-z" : {
+      "apeMaterno" : "Guerrero",
+      "apePaterno" : "Sánchez",
+      "correo" : "test2@test.com",
+      "nombre" : "Francisco",
+      "perfilUrl" : "",
+      "userId" : "qrULPh3wvXanAKiFzCLS1qLfT2m2"
+    }
+  }
+}

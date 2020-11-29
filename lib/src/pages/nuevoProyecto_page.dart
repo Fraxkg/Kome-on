@@ -152,6 +152,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
 
     return TextFormField(
       //autofocus: true,
+      enabled: false,
       initialValue: nombre,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -318,7 +319,7 @@ class _NuevoProyectoPageState extends State<NuevoProyectoPage> {
             child: ListBody(
               children: <Widget>[
                 Text('Proyecto creado con éxito'),
-                Text('Recuerda agregar tareas (´・ω・`)'),
+                Text('Recuerda agregar tareas'),
               ],
             ),
           ),

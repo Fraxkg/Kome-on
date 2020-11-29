@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:kome_on/src/providers/usuario_provider.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -11,6 +12,10 @@ class RegistroPage extends StatefulWidget {
 class _RegistroPageState extends State<RegistroPage> {
   String email='';
   String password='';
+  String nombre="";
+  String apePaterno="";
+  String apeMaterno="";
+
   final usuarioProvider=new UsuarioProvider();
 
    final formKeyRegister = GlobalKey<FormState>();
@@ -19,8 +24,9 @@ class _RegistroPageState extends State<RegistroPage> {
   MediaQueryData queryData;
   @override
   Widget build(BuildContext context) {
-     RegExp regExp   = new RegExp(pattern);
+    RegExp regExp   = new RegExp(pattern);
     queryData = MediaQuery.of(context);
+    
     return WillPopScope(
       onWillPop: () async => false,
         child: Container(
@@ -69,7 +75,14 @@ class _RegistroPageState extends State<RegistroPage> {
               child: Column(
                 children: <Widget>[
                   Text('Regístrate', style: TextStyle(fontSize: 20.0)),
-                  SizedBox( height: 60.0 ),
+                  
+                  SizedBox( height: 40.0 ),
+                  _crearNombre(),
+                  SizedBox( height: 10.0 ),
+                  _crearApellidoP(),
+                  SizedBox( height: 10.0 ),
+                  _crearApellidoM(),
+                  SizedBox( height: 30.0 ),
                   _crearEmail(regExp),
                   SizedBox( height: 30.0 ),
                   _crearPassword(),
@@ -147,7 +160,7 @@ Widget _crearBoton() {
 
       formKeyRegister.currentState.save();
       
-      Map info =await usuarioProvider.nuevoUsuario(email, password);
+      Map info =await usuarioProvider.nuevoUsuario(email, password,nombre,apePaterno,apeMaterno);
       
 
       if(info['ok']){
@@ -190,6 +203,99 @@ Widget _crearBoton() {
           
               });
             email=valor;
+          }
+        ),
+
+      );
+  }
+  Widget _crearNombre(){
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            icon: Icon( FlutterIcons.user_ant, color: Colors.deepPurple ),
+            hintText: 'Nombres',
+            labelText: 'Nombre/s',
+            
+          ),
+          
+          validator: (value){
+            if(value.length<2){
+                return 'Nombre muy corto';
+              }else{
+                return null;
+              }
+          },
+          onChanged: (valor){
+            setState(() {
+            
+          
+              });
+            nombre=valor;
+          }
+        ),
+
+      );
+  }
+  Widget _crearApellidoP(){
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            icon: Icon( FlutterIcons.blank_mco, color: Colors.white ),
+            hintText: 'Apellido Paterno',
+            labelText: 'Apellido Paterno',
+            
+          ),
+          
+          validator: (value){
+            if(value.length<2){
+                return 'Apellido muy corto';
+              }else{
+                return null;
+              }
+          },
+          onChanged: (valor){
+            setState(() {
+            
+          
+              });
+            apePaterno=valor;
+          }
+        ),
+
+      );
+  }
+  Widget _crearApellidoM(){
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            icon: Icon( FlutterIcons.user_ant, color: Colors.white ),
+            hintText: 'Apellido Materno',
+            labelText: 'Apellido Materno',
+            
+          ),
+          
+          validator: (value){
+            if(value.length<2){
+                return 'Apellido muy corto';
+              }else{
+                return null;
+              }
+          },
+          onChanged: (valor){
+            setState(() {
+            
+          
+              });
+            apeMaterno=valor;
           }
         ),
 

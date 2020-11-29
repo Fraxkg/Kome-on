@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:kome_on/src/models/equipo_model.dart';
 import 'package:kome_on/src/models/miembro_model.dart';
 import 'package:kome_on/src/models/proyecto_model.dart';
@@ -27,9 +28,10 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   final tareaProvider = new TareasProvider();
   final miembroProvider = new MiembrosProvider();
 
-  String tipo='Diseño';
+  String tipo='Análisis';
   String _opcionSelecTipos;
-  List _tipos= ['Diseño', 'Análisis','Programación','a','Libre'];
+  //analisis verder, diseño amairllo codigor rojo y mantenimiento azul
+  List _tipos= ['Análisis', 'Diseño','Código','Mantenimiento'];
 
   String requisito='Ninguno';
   List _requisitos= ['Ninguno'];
@@ -73,12 +75,24 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
                 SizedBox(height:20),
                 Row(
                   mainAxisAlignment:  MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.graphic_eq_outlined),
-                    SizedBox(width:20),
+                  children: <Widget>[
+                    Icon(FlutterIcons.class__mdi),
+                    SizedBox(width:17),
                     _crearTipo(),
-                    _obtenerTareas(_idProyecto)
-                  ],
+                  ]
+                  
+                ),
+                
+                SizedBox(height:20),
+                
+                Row(
+                  mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Icon(FlutterIcons.note_oct,color: Colors.black),
+                    SizedBox(width:17),
+                    _obtenerTareas(_idProyecto),
+                  ]
+                  
                 ),
                 SizedBox(height: 20),
                 _crearDescripcion(),
@@ -93,6 +107,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
                   mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Icon(Icons.verified_user),
+                    SizedBox(width:17),
                     _obtenerMiembros(),
                   ]
                   
@@ -208,7 +223,9 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   _crearUrgencia(){
     return Row(
       children:<Widget>[
-        Text("Urgente",style: TextStyle(fontSize:16),) ,
+        Icon(FlutterIcons.warning_faw),
+        SizedBox(width:20),
+        Text("Urgente",style: TextStyle(fontSize:18),) ,
         Switch(
           value: _flagUrgencia,
           
@@ -223,36 +240,38 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   }
  
   Widget _crearTipo(){
-    return Container(
-      
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.0),
-        color: Colors.cyan,
-        border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
-      ),
-      padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-            //alignedDropdown: true,
-          child: DropdownButton(
-            
-            icon: Icon(Icons.expand_more,color: Colors.white, ),
-            dropdownColor: Colors.teal.withOpacity(.9),
-            //focusColor: Color.fromRGBO(0, 106, 120,.5),
-            style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            value: _opcionSelecTipos,
-            items: getOpcionesDropdownTipos(),
-            onTap: (){},
+    return Expanded(
+          child: Container(
+        
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: Colors.cyan,
+          border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
+        ),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
+        child: DropdownButtonHideUnderline(
+          child: ButtonTheme(
+              //alignedDropdown: true,
+            child: DropdownButton(
+              
+              icon: Icon(Icons.expand_more,color: Colors.white, ),
+              dropdownColor: Colors.teal.withOpacity(.9),
+              //focusColor: Color.fromRGBO(0, 106, 120,.5),
+              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+              value: _opcionSelecTipos,
+              items: getOpcionesDropdownTipos(),
+              onTap: (){},
 
-            onChanged: (op){
-              setState(() {
-                
-                 _opcionSelecTipos = op;
-              });
-            },
-            
-            hint: Text("Tipo",style: TextStyle(
-                    color: Colors.white,)),
+              onChanged: (op){
+                setState(() {
+                  
+                   _opcionSelecTipos = op;
+                });
+              },
+              
+              hint: Text("Tipo",style: TextStyle(
+                      color: Colors.white,)),
+            ),
           ),
         ),
       ),
@@ -261,37 +280,39 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   Widget _crearMiembros(){
     // print("emial lider"+miembro);
     // print("lista"+_miembros.toString()); 
-    return Container(
-      
-      decoration: BoxDecoration(
+    return Expanded(
+          child: Container(
         
-        borderRadius: BorderRadius.circular(15.0),
-        color: Colors.cyan,
-        border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
-      ),
-      padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-            //alignedDropdown: true,
-          child: DropdownButton(
-            
-            icon: Icon(Icons.expand_more,color: Colors.white, ),
-            dropdownColor: Colors.teal.withOpacity(.9),
-            //focusColor: Color.fromRGBO(0, 106, 120,.5),
-            style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            value: _opcionSelecMiembros,
-            items: getOpcionesDropdownMiembros(),
-            onTap: (){},
+        decoration: BoxDecoration(
+          
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.cyan,
+          border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
+        ),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
+        child: DropdownButtonHideUnderline(
+          child: ButtonTheme(
+              //alignedDropdown: true,
+            child: DropdownButton(
+              
+              icon: Icon(Icons.expand_more,color: Colors.white, ),
+              dropdownColor: Colors.teal.withOpacity(.9),
+              //focusColor: Color.fromRGBO(0, 106, 120,.5),
+              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+              value: _opcionSelecMiembros,
+              items: getOpcionesDropdownMiembros(),
+              onTap: (){},
 
-            onChanged: (op){
-              setState(() {
-                
-                 _opcionSelecMiembros = op;
-              });
-            },
-            
-            hint: Text("Responsable",style: TextStyle(
-                    color: Colors.white,)),
+              onChanged: (op){
+                setState(() {
+                  
+                   _opcionSelecMiembros = op;
+                });
+              },
+              
+              hint: Text("Responsable",style: TextStyle(
+                      color: Colors.white,)),
+            ),
           ),
         ),
       ),
@@ -299,36 +320,38 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   }
 
   Widget _crearRequisito(){
-    return Container(
-      
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.0),
-        color: Colors.cyan,
-        border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
-      ),
-      padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-        //  alignedDropdown: true,
-            child: DropdownButton(
-            
-            icon: Icon(Icons.expand_more,color: Colors.white, ),
-            dropdownColor: Colors.teal.withOpacity(.9),
-            //focusColor: Color.fromRGBO(0, 106, 120,.5),
-            style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            value: _opcionSelecRequisitos,
-            items: getOpcionesDropdownRequisito(),
-            onTap: (){},
-           
-            onChanged: (op){
-              setState(() {
-                
-                 _opcionSelecRequisitos = op;
-              });
-            },
-            
-            hint: Text("Requisito",style: TextStyle(
-                    color: Colors.white,)),
+    return Expanded(
+          child: Container(
+        
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: Colors.cyan,
+          border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
+        ),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
+        child: DropdownButtonHideUnderline(
+          child: ButtonTheme(
+          //  alignedDropdown: true,
+              child: DropdownButton(
+              
+              icon: Icon(Icons.expand_more,color: Colors.white, ),
+              dropdownColor: Colors.teal.withOpacity(.9),
+              //focusColor: Color.fromRGBO(0, 106, 120,.5),
+              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+              value: _opcionSelecRequisitos,
+              items: getOpcionesDropdownRequisito(),
+              onTap: (){},
+             
+              onChanged: (op){
+                setState(() {
+                  
+                   _opcionSelecRequisitos = op;
+                });
+              },
+              
+              hint: Text("Requisito",style: TextStyle(
+                      color: Colors.white,)),
+            ),
           ),
         ),
       ),
@@ -348,7 +371,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
         
         labelText: 'Descripción de la tarea',
         
-        icon: Icon(Icons.edit)
+        icon: Icon(Icons.edit,color: Colors.black,)
       ),
       onSaved: (value)=>tarea.descTarea=value,
       validator: (value){
@@ -380,7 +403,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
         labelText: 'Nombre de la tarea',
        
         
-        icon: Icon(Icons.note_add_outlined)
+        icon: Icon(FlutterIcons.sticky_note_faw,color:Colors.black)
       ),
       onSaved: (value)=>tarea.nombre=value,
       validator: (value){
@@ -414,15 +437,15 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
         labelText: 'Puntos de esfuerzo',
        
         
-        icon: Icon(Icons.grade)
+        icon: Icon(Icons.grade,color: Colors.black,)
       ),
       onSaved: (value)=>tarea.esfuerzo=value,
       validator: (value){
-        int wip=int.parse(value);
-        if ( value.length==1 ||value.length==2 && wip>=1 &&wip<=20  ) {
+        int esfuerzos=int.parse(value);
+        if (esfuerzos>=1 && esfuerzos<=999  ) {
           return null;
         } else {
-          return 'Sólo números enteros, >1 <20';
+          return 'Sólo números enteros, >1 <999';
         }
 
       },
@@ -461,7 +484,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
   }
   
   Widget _verificarProyecto(proyectoId,queryData){
-    print(nombreProyecto);
+    //print(nombreProyecto);
     return FutureBuilder(
       future: proyectosProvider.cargarProyectos(),
       builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
@@ -471,7 +494,7 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
           for(int i=0;i<proyectos.length;i++){
              if(proyectos[i].id==proyectoId){
                nombreProyecto=proyectos[i].nombre;
-               print(nombreProyecto);
+               //print(nombreProyecto);
              }
           }
          
