@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:kome_on/src/pages/allStatics_page.dart';
 import 'package:kome_on/src/pages/editarPerfil.dart';
 
 import 'package:kome_on/src/pages/home_page.dart';
@@ -9,6 +10,7 @@ import 'package:kome_on/src/pages/nuevaTarea_page.dart';
 import 'package:kome_on/src/pages/nuevoProyecto_page.dart';
 import 'package:kome_on/src/pages/project_page.dart';
 import 'package:kome_on/src/pages/registro_page.dart';
+import 'package:kome_on/src/pages/statics_page.dart';
 import 'package:kome_on/src/pages/task_page.dart';
 import 'package:kome_on/src/preferencias_usuario/preferencias_usuario.dart';
 
@@ -51,7 +53,9 @@ class MyApp extends StatelessWidget {
         '/login'          : ( BuildContext context ) => LoginPage(),
         '/registro'       : ( BuildContext context ) => RegistroPage(),
         '/nuevaTarea'     : ( BuildContext context ) => NuevaTareaPage(),
-        '/editarPerfil'   : ( BuildContext context ) => EditarPerfilPage()
+        '/editarPerfil'   : ( BuildContext context ) => EditarPerfilPage(),
+        '/statics'        : ( BuildContext context ) => StaticsPage(),
+        '/allStatics'     : ( BuildContext context ) => AllStaticsPage()
       },
     );
   }

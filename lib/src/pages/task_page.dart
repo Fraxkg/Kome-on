@@ -22,6 +22,7 @@ class _TaskPageState extends State<TaskPage> {
   final _prefs= new PreferenciasUsuario();
   String wipLimite='0';
   int _indexNave=0;
+  bool _admin=false;
   bool _editMode=false;
   final tareasProvider= new TareasProvider();
   final proyectosProvider = new ProyectosProvider();
@@ -32,23 +33,32 @@ class _TaskPageState extends State<TaskPage> {
     String _idTarea =arguments[0];
     String _wipActual =arguments[1];
     String _idProyecto =arguments[2];
+    String _nombreTarea =arguments[3];
+    String _responsable =arguments[4];
+
+    if(_responsable==_prefs.email){
+      _admin=true;
+    }
     // print(_idTarea+_wipActual);
     queryData = MediaQuery.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Plataforma en línea de\neducación para niños"),
+        title: Text("$_nombreTarea"),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
-          Switch(
-            
-            value: _editMode,
-            onChanged: (value) {
-              setState(() {
-                _editMode = value;
-                print("modo edicion: "+"$_editMode");
-              });
-            }
+          Visibility(
+            child: Switch(
+              
+              value: _editMode,
+              onChanged: (value) {
+                setState(() {
+                  _editMode = value;
+                  print("modo edicion: "+"$_editMode");
+                });
+              }
+            ),
+            visible: _admin,
           )
         ]
       ),

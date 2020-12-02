@@ -1,7 +1,8 @@
 
 
 import 'dart:math';
-
+import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -39,13 +40,16 @@ class _ProjectPageState extends State<ProjectPage> {
 
   @override
   Widget build(BuildContext context) {
-    String _idProyecto = ModalRoute.of(context).settings.arguments;
-    
+    List arguments = ModalRoute.of(context).settings.arguments;
+    String _idProyecto=arguments[0];
+    String _nombreProyecto=arguments[1];
+    String _proyectoFechaInicio=arguments[2];
+    String _proyectoResponsable=arguments[3];
     //print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: SingleChildScrollView(child: Text("$_idProyecto")),
+        title: SingleChildScrollView(child: Text("$_nombreProyecto")),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
          
@@ -71,7 +75,7 @@ class _ProjectPageState extends State<ProjectPage> {
           
         ]
       ),
-      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux)),
+      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable)),
      
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -114,17 +118,17 @@ class _ProjectPageState extends State<ProjectPage> {
     });
   }
   
-  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux){
+  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable){
     
     return SingleChildScrollView(
       child: Column(
         children: [
           
-          _tablero(_idProyecto),
+          _tablero(_idProyecto,_proyectoResponsable),
           Divider(),
           _verificarEquipo(_idProyecto),
           Divider(),
-          _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux),
+          _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable),
           
           
           Divider(),
@@ -138,39 +142,39 @@ class _ProjectPageState extends State<ProjectPage> {
   }
 
 //informacion de las tareas ToDo
-Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto){
-      return FutureBuilder(
-        future: tareasProvider.cargarTareas(),
-        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
-          if(snapshot.hasData){
-            //print("buscar proyectos de"+_idProyecto);
-            List<TareaModel> seleccion=[];
-            var tareas = snapshot.data;
-              //print(_idProyecto);
-                
-                for(int j=0;j<tareas.length;j++){
-                  if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="To-do"){
-                    seleccion.add(tareas[j]);
-                  }
-                }
+Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto,_proyectoResponsable){
+  return FutureBuilder(
+    future: tareasProvider.cargarTareas(),
+    builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+      if(snapshot.hasData){
+        //print("buscar proyectos de"+_idProyecto);
+        List<TareaModel> seleccion=[];
+        var tareas = snapshot.data;
+          //print(_idProyecto);
+            
+            for(int j=0;j<tareas.length;j++){
+              if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="To-do"){
+                seleccion.add(tareas[j]);
+              }
+            }
 
-                return ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                //4 ahorita
-                itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
-                
-              );
+            return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            //4 ahorita
+            itemCount: seleccion.length,
+            itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
+            
+          );
 
-          }else{
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      );
-  }
+      }else{
+        return Center(child: CircularProgressIndicator());
+      }
+    }
+  );
+}
 // in p rogress
-Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux){
+Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux,_proyectoResponsable){
       return FutureBuilder(
         future: tareasProvider.cargarTareas(),
         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -196,7 +200,7 @@ Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux){
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
                 
               );
 
@@ -207,7 +211,7 @@ Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux){
       );
   }
 /// done
-Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
+Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto,_proyectoResponsable){
       return FutureBuilder(
         future: tareasProvider.cargarTareas(),
         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -228,7 +232,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
                 
               );
 
@@ -240,7 +244,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto){
   }
 
 //crear postiti
-_crearTareas(TareaModel tarea, _idProyecto){
+_crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
     List<double> margenes=_numero25();
     Color mainColor=Colors.yellow[200];
     Color borderColor=Colors.white;
@@ -333,13 +337,13 @@ _crearTareas(TareaModel tarea, _idProyecto){
       onTap: (){
         
         String idTarea=tarea.id;
-        List args=["$idTarea","$wip","$_idProyecto"];
+        List args=["$idTarea","$wip","$_idProyecto","${tarea.nombre}","$_proyectoResponsable"];
         Navigator.pushNamed(context, '/task',arguments: args).then((value) => setState((){}));
       },
     );
   }
  //informacion del proyecto
-  Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux){
+  Widget _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable){
       return FutureBuilder(
         future: proyectosProvider.cargarProyectos(),
         builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
@@ -360,7 +364,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: 1,
-                itemBuilder: (context,i) => _generarInfo(queryData, context, seleccion),
+                itemBuilder: (context,i) => _generarInfo(queryData, context, seleccion,_idProyecto,_proyectoFechaInicio,_proyectoResponsable),
                 
                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                   
@@ -412,7 +416,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
       );
   }
   
-  Widget _generarInfo(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
+  Widget _generarInfo(MediaQueryData screenWidth,  context, ProyectoModel proyecto,_idProyecto,_proyectoFechaInicio,_proyectoResponsable){
     //print(proyecto.nombre+"si entro");
     return Container(
           
@@ -437,11 +441,11 @@ _crearTareas(TareaModel tarea, _idProyecto){
                   ),
                   Container(
                     margin: EdgeInsets.only(left:0, top: 5, bottom: 5,right:0),
-                    child:_actividad()
+                    child:_actividad(_idProyecto)
                   ),
                   Container(
                     margin: EdgeInsets.only(left:5, top: 5, bottom: 5,right:0),
-                    child:_estadisticas()
+                    child:_estadisticas(_idProyecto,_proyectoFechaInicio)
                   ),
                   
                   
@@ -450,8 +454,8 @@ _crearTareas(TareaModel tarea, _idProyecto){
       ),
     );
   }
- 
-  Widget _tablero(_idProyecto){
+
+  Widget _tablero(_idProyecto,_proyectoResponsable){
     return Container(
       margin: EdgeInsets.only(left:5, top: 10, bottom: 10,right:5),
       
@@ -489,7 +493,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaToDo(queryData, tareasProvider, _idProyecto)
+                          _recuperarInfoTareaToDo(queryData, tareasProvider, _idProyecto,_proyectoResponsable)
                          
                         ],
                       ),
@@ -530,7 +534,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto,aux)
+                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto,aux,_proyectoResponsable)
                          
                         ],
                       ),
@@ -571,7 +575,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaDone(queryData, tareasProvider, _idProyecto)
+                          _recuperarInfoTareaDone(queryData, tareasProvider, _idProyecto,_proyectoResponsable)
                          
                         ],
                       ),
@@ -706,7 +710,7 @@ _crearTareas(TareaModel tarea, _idProyecto){
     return Text(miembro.email,style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center);
   }
   
-  Widget _actividad(){
+  Widget _actividad(_idProyecto){
     return Container(
       width:getMediaWidth(queryData.size.width),
       height:90,
@@ -725,21 +729,141 @@ _crearTareas(TareaModel tarea, _idProyecto){
       child: SingleChildScrollView(
         child: Column(
           children: [
+            
             SizedBox(height: 10,),
             Text("Actividad",style: TextStyle(color: Colors.black,fontSize: 18, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
-            SizedBox(height: 10,),
-            Text("JUan1",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
-            Text("terminó #1",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
-            SizedBox(height: 5,),
-            Text("Ramon 2",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
-            Text("terminó #2",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
+            _obtenerActividad(_idProyecto),
+            
+            
           ],
         ),
       ),
     );
   }
+  Widget _obtenerActividad(_idProyecto){
+   
+  return FutureBuilder(
+    future: tareasProvider.cargarTareas(),
+    builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+      if(snapshot.hasData){
+        //print("buscar proyectos de"+_idProyecto);
+        final DateTime now=DateTime.now();
+        final DateFormat formatter =DateFormat('yyyy-MM-dd');
+        final String formatted = formatter.format(now);
+        print(formatted);
+        List nodash=formatted.split("-");
+        List<int> _fechaActual=[];
+        _fechaActual.add(int.parse(nodash[0]));
+        _fechaActual.add(int.parse(nodash[1]));
+        _fechaActual.add(int.parse(nodash[2]));
+
+        List<TareaModel> seleccion=[];
+        var tareas = snapshot.data;
+          //print(_idProyecto);
+        
+        
+            
+            for(int j=0;j<tareas.length;j++){
+              if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="In progress" ){
+                String _fechatarea=tareas[j].fechaInicio;
+                List nodash=_fechatarea.split("-");
+                List<int> _fecha=[];
+                _fecha.add(int.parse(nodash[0]));
+                _fecha.add(int.parse(nodash[1]));
+                _fecha.add(int.parse(nodash[2]));
+
+                List<int> resta=[];
+                
+                
+                for(int j=0;j<_fecha.length;j++){
+                  resta.add((_fechaActual[j] - _fecha[j]).abs()); 
+                }
+                
+                int ano=resta[0]*365;
+                int mes=resta[1]*30;
+                
+                int difDias=ano+mes+resta[2];
+
+                if(difDias<=7){
+                seleccion.add(tareas[j]);
+                }
+                
+              }
+              else if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="Done" ){
+                String _fechatarea=tareas[j].fechaFin;
+                List nodash=_fechatarea.split("-");
+                List<int> _fecha=[];
+                _fecha.add(int.parse(nodash[0]));
+                _fecha.add(int.parse(nodash[1]));
+                _fecha.add(int.parse(nodash[2]));
+
+                List<int> resta=[];
+                
+                
+                for(int j=0;j<_fecha.length;j++){
+                  resta.add((_fechaActual[j] - _fecha[j]).abs()); 
+                }
+                
+                int ano=resta[0]*365;
+                int mes=resta[1]*30;
+                
+                int difDias=ano+mes+resta[2];
+
+                if(difDias<=7){
+                seleccion.add(tareas[j]);
+                }
+                
+              }
+            }
+            if (seleccion.isNotEmpty){
+              return GridView.builder(
+                 physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                //4 ahorita
+                itemCount: seleccion.length,
+                itemBuilder: (context,i) => _mostrarActividad(seleccion[i]),
+                
+                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                  
+                  crossAxisCount: 1,
+                  
+                  childAspectRatio: 3,
+                ),
+              );
+            }else{
+              return Container(child: Text("Sin actividad en 1 semana",style:TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center));
+            }
+             
+          
+
+      }else{
+        return Center();
+      }
+    }
+  );
+
+ }
   
-  Widget _estadisticas(){
+  Widget _mostrarActividad(TareaModel tarea){
+    if(tarea.estadoTarea=="In progress"){
+     return Column(children: [
+      SizedBox(height: 2,),
+      Text("${tarea.responsable}",style: TextStyle(color: Colors.blue,fontSize: 16,),textAlign: TextAlign.center),
+      Text("Empezó ${tarea.nombre}",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
+    ],);
+     
+    }else{
+      return Column(children: [
+      SizedBox(height: 2,),
+      Text("${tarea.responsable}",style: TextStyle(color: Colors.blue,fontSize: 16,),textAlign: TextAlign.center),
+      Text("Terminó ${tarea.nombre}",style: TextStyle(color: Colors.black,fontSize: 16,),textAlign: TextAlign.center),
+    ],);
+    }
+    
+  }
+
+  Widget _estadisticas(_idProyecto,_proyectoFechaInicio){
+    List args=[_idProyecto,_proyectoFechaInicio];
     return Container(
       width:getMediaWidth(queryData.size.width),
       height:90,
@@ -749,20 +873,25 @@ _crearTareas(TareaModel tarea, _idProyecto){
         color: Colors.blue[100],
         boxShadow: [
             BoxShadow(
-              color: Colors.grey,
+              color: Colors.blue,
               offset: Offset(0.0, 3.0), //(x,y)
               blurRadius: 6.0,
             ),
           ],
       ),
-      child: Column(
-        children: [
-          SizedBox(height: 10,),
-          Text("Estadísticas",style: TextStyle(color: Colors.black,fontSize: 18, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
-          SizedBox(height: 10,),
-          Icon(Icons.play_arrow,size: 40,)
-          
-        ],
+      child: InkWell(
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(height: 10,),
+              Text("Estadísticas",style: TextStyle(color: Colors.black,fontSize: 18, fontWeight:FontWeight.bold), textAlign: TextAlign.center),
+              SizedBox(height: 10,),
+              Icon(FlutterIcons.area_graph_ent,size: 40,)
+              
+            ],
+          ),
+        ),
+        onTap: ()=>Navigator.pushNamed(context, "/allStatics", arguments: args),
       ),
     );
   }

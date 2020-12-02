@@ -449,15 +449,15 @@ Widget _obtenerEquipos(queryData,MiembrosProvider miembrosProvider,userId){
 }
 
 Widget _obtenerProyectos(queryData,EquiposProvider equiposProvider){
-  Future.delayed(const Duration(seconds: 2), () {
+//   Future.delayed(const Duration(seconds: 2), () {
 
-// Here you can write your code
+// // Here you can write your code
 
-                  setState(() {
-                    // Here you can write your code for open new view
-                  });
+//                   setState(() {
+//                     // Here you can write your code for open new view
+//                   });
 
-                });
+//                 });
      return FutureBuilder(
     future: equiposProvider.cargarEquipo(),
     builder: (BuildContext context, AsyncSnapshot<List<EquipoModel>> snapshot){
@@ -509,15 +509,15 @@ Widget _crearTablero(queryData,proyectosProvider){
             }
             }
           }
-              Future.delayed(const Duration(seconds: 2), () {
+//               Future.delayed(const Duration(seconds: 2), () {
 
-// Here you can write your code
+// // Here you can write your code
 
-                  setState(() {
-                    // Here you can write your code for open new view
-                  });
+//                   setState(() {
+//                     // Here you can write your code for open new view
+//                   });
 
-                });
+//                 });
               return GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -590,10 +590,12 @@ Widget _devs(queryData,context,DesarrolladorModel dev){
   
   return Container(
     margin: EdgeInsets.all(5),
+    
     child:Column(
       children:<Widget>[
         Container( 
-          
+          height: 150,
+          width: 200,
           child: ClipRRect(
 
             borderRadius: BorderRadius.circular(20.0),
@@ -688,7 +690,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
       ),
     ),
     onTap: (){
-      String args="${proyecto.id}";
+      List args= ["${proyecto.id}", "${proyecto.nombre}","${proyecto.fechaInicio}","${proyecto.responsable}"];
       Navigator.pushNamed(context, '/project',arguments: args);
     },
   );
