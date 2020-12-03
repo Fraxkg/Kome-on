@@ -25,6 +25,19 @@ class ProyectosProvider{
     return true;
   
   }
+
+  Future<bool>editarProyecto(ProyectoModel proyecto)async{
+    final url='$_url/proyectos/${proyecto.id}.json';
+  
+    final resp = await http.put(url, body: proyectoModelToJson(proyecto));
+
+    final decodedData=json.decode(resp.body);
+
+    print(decodedData);
+
+    return true;
+  
+  }
   Future<List<ProyectoModel>> cargarProyectos()async{
     final url='$_url/proyectos.json';
     final resp= await http.get(url);

@@ -25,6 +25,8 @@ class _TaskPageState extends State<TaskPage> {
   bool _admin=false;
   bool _editMode=false;
   bool flagNoHistoria=true;
+  Color tarjetaColor= Colors.amber[50];
+
   final tareasProvider= new TareasProvider();
   final proyectosProvider = new ProyectosProvider();
   MediaQueryData queryData;
@@ -37,6 +39,21 @@ class _TaskPageState extends State<TaskPage> {
     String _nombreTarea =arguments[3];
     String _responsable =arguments[4];
     String _esHistoria = arguments[5];
+    String _tipoTarea = arguments[6];
+
+    if(_tipoTarea=="Código"){
+      tarjetaColor=Colors.red[50];
+    }
+    if(_tipoTarea=="Mantenimiento"){
+      tarjetaColor=Colors.blue[50];
+    }
+    if(_tipoTarea=="Análisis"){
+      tarjetaColor=Colors.green[50];
+    }
+    if(_tipoTarea=="Diseño"){
+      tarjetaColor=Colors.amber[50];
+    }
+    
     if(_esHistoria=="si"){
       flagNoHistoria=false;
     }
@@ -117,7 +134,7 @@ class _TaskPageState extends State<TaskPage> {
         
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(4.0),
-        color: Colors.amberAccent[100]
+        color: tarjetaColor
           ),
       child: SingleChildScrollView(
         child: Column(
@@ -300,7 +317,7 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text("Estado", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -312,7 +329,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -326,41 +343,41 @@ class _TaskPageState extends State<TaskPage> {
               )
             ],
           ),
-          Column(
-            children: [
-              Container(
-                height: 50,
-                width: queryData.size.width/4-11,
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                child: Text("Requisito", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
-                decoration: BoxDecoration(
-                  border: Border.all(color: _colorBorderMain()),
-                  borderRadius: BorderRadius.circular(4.0),
-                  color: _colorMain()
-                    ),
-              ),
-              Container(
-                height: 50,
-                width: queryData.size.width/4-11,
-                padding: EdgeInsets.all(5),
-                alignment: Alignment.center,
+          // Column(
+          //   children: [
+          //     Container(
+          //       height: 50,
+          //       width: queryData.size.width/4-11,
+          //       padding: EdgeInsets.all(10),
+          //       alignment: Alignment.center,
+          //       child: Text("Requisito", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
+          //       decoration: BoxDecoration(
+          //         border: Border.all(color: _colorBorderMain()),
+          //         borderRadius: BorderRadius.circular(4.0),
+          //         color: _colorMain()
+          //           ),
+          //     ),
+          //     Container(
+          //       height: 50,
+          //       width: queryData.size.width/4-11,
+          //       padding: EdgeInsets.all(5),
+          //       alignment: Alignment.center,
                 
-                child: Text(tarea.requisito,
-                style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
-                decoration: BoxDecoration(
-                  border: Border.all(color:_colorBorderMain()),
-                  borderRadius: BorderRadius.circular(4.0),
-                  color: Colors.grey[300]
-                ),
-              )
-            ],
-          ),
+          //       child: Text(tarea.requisito,
+          //       style:TextStyle(fontSize: 15),textAlign: TextAlign.center,),
+          //       decoration: BoxDecoration(
+          //         border: Border.all(color:_colorBorderMain()),
+          //         borderRadius: BorderRadius.circular(4.0),
+          //         color: Colors.grey[300]
+          //       ),
+          //     )
+          //   ],
+          // ),
           Column(
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text("Esfuerzo", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -372,7 +389,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -390,7 +407,7 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text("Urgencia", style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),textAlign: TextAlign.center,),
@@ -402,7 +419,7 @@ class _TaskPageState extends State<TaskPage> {
               ),
               Container(
                 height: 50,
-                width: queryData.size.width/4-11,
+                width: queryData.size.width/3-15,
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 
@@ -616,7 +633,8 @@ class _TaskPageState extends State<TaskPage> {
             child: Container(margin: EdgeInsets.only(left:1, top: 10),width: 50, height:50,child: Icon(Icons.mode_outlined  , color: Colors.red,size: 45,)
 
             ),onTap: (){
-
+              List args=[_idTarea,"tarea"];
+              Navigator.pushNamed(context, '/editarPage', arguments: args).then((value) => setState((){}));
             },
           ),
         

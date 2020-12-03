@@ -83,17 +83,17 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
                   
                 ),
                 
-                SizedBox(height:20),
+                // SizedBox(height:20),
                 
-                Row(
-                  mainAxisAlignment:  MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Icon(FlutterIcons.note_oct,color: Colors.black),
-                    SizedBox(width:17),
-                    _obtenerTareas(_idProyecto),
-                  ]
+                // Row(
+                //   mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                //   children: <Widget>[
+                //     Icon(FlutterIcons.note_oct,color: Colors.black),
+                //     SizedBox(width:17),
+                //     _obtenerTareas(_idProyecto),
+                //   ]
                   
-                ),
+                // ),
                 SizedBox(height: 20),
                 _crearDescripcion(),
                 SizedBox(height: 20),
@@ -139,46 +139,46 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
        
     );
   }
-  Widget _obtenerTareas(_idProyecto){
-    return FutureBuilder(
-        future: tareaProvider.cargarTareas(),
-        builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
-          if(snapshot.hasData){
-            //print("buscar proyectos de"+_idProyecto);
-            //MiembroModel seleccion;
-            var tareas = snapshot.data;
-              //print(_idProyecto);
+//   Widget _obtenerTareas(_idProyecto){
+//     return FutureBuilder(
+//         future: tareaProvider.cargarTareas(),
+//         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
+//           if(snapshot.hasData){
+//             //print("buscar proyectos de"+_idProyecto);
+//             //MiembroModel seleccion;
+//             var tareas = snapshot.data;
+//               //print(_idProyecto);
                 
-                //print(_idEquipo);
-                _requisitos=["No asignado"];
-                for(int j=0;j<tareas.length;j++){
-                  if(tareas[j].proyectoId==_idProyecto){
-                   // print("si entra");
+//                 //print(_idEquipo);
+//                 _requisitos=["No asignado"];
+//                 for(int j=0;j<tareas.length;j++){
+//                   if(tareas[j].proyectoId==_idProyecto){
+//                    // print("si entra");
                     
                     
-                    _requisitos.add(tareas[j].nombre);
+//                     _requisitos.add(tareas[j].nombre);
                    
-                  }
-                }
-                // print("aaaa"+miembro);
-                // print(_miembros);
-                Future.delayed(const Duration(milliseconds: 500), () {
+//                   }
+//                 }
+//                 // print("aaaa"+miembro);
+//                 // print(_miembros);
+//                 Future.delayed(const Duration(milliseconds: 500), () {
 
-// Here you can write your code
+// // Here you can write your code
 
-                  setState(() {
-                    // Here you can write your code for open new view
-                  });
+//                   setState(() {
+//                     // Here you can write your code for open new view
+//                   });
 
-                });
-                return _crearRequisito();
+//                 });
+//                 return _crearRequisito();
 
-          }else{
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      );
-  }
+//           }else{
+//             return Center(child: CircularProgressIndicator());
+//           }
+//         }
+//       );
+//   }
   Widget _obtenerMiembros(){
     return FutureBuilder(
         future: miembroProvider.cargarMiembro(),
@@ -319,44 +319,44 @@ class _NuevaTareaPageState extends State<NuevaTareaPage> {
     ); 
   }
 
-  Widget _crearRequisito(){
-    return Expanded(
-          child: Container(
+  // Widget _crearRequisito(){
+  //   return Expanded(
+  //         child: Container(
         
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: Colors.cyan,
-          border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
-        ),
-        padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
-        child: DropdownButtonHideUnderline(
-          child: ButtonTheme(
-          //  alignedDropdown: true,
-              child: DropdownButton(
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(15.0),
+  //         color: Colors.cyan,
+  //         border: Border.all(color: Color.fromRGBO(120, 0, 155, .5))
+  //       ),
+  //       padding: const EdgeInsets.only(right: 20.0, left: 20.0 ),
+  //       child: DropdownButtonHideUnderline(
+  //         child: ButtonTheme(
+  //         //  alignedDropdown: true,
+  //             child: DropdownButton(
               
-              icon: Icon(Icons.expand_more,color: Colors.white, ),
-              dropdownColor: Colors.teal.withOpacity(.9),
-              //focusColor: Color.fromRGBO(0, 106, 120,.5),
-              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-              value: _opcionSelecRequisitos,
-              items: getOpcionesDropdownRequisito(),
-              onTap: (){},
+  //             icon: Icon(Icons.expand_more,color: Colors.white, ),
+  //             dropdownColor: Colors.teal.withOpacity(.9),
+  //             //focusColor: Color.fromRGBO(0, 106, 120,.5),
+  //             style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+  //             value: _opcionSelecRequisitos,
+  //             items: getOpcionesDropdownRequisito(),
+  //             onTap: (){},
              
-              onChanged: (op){
-                setState(() {
+  //             onChanged: (op){
+  //               setState(() {
                   
-                   _opcionSelecRequisitos = op;
-                });
-              },
+  //                  _opcionSelecRequisitos = op;
+  //               });
+  //             },
               
-              hint: Text("Requisito",style: TextStyle(
-                      color: Colors.white,)),
-            ),
-          ),
-        ),
-      ),
-    ); 
-  }
+  //             hint: Text("Requisito",style: TextStyle(
+  //                     color: Colors.white,)),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   ); 
+  // }
   
   Widget _crearDescripcion(){
     return TextFormField(

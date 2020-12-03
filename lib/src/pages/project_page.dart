@@ -348,7 +348,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable,_esHistoria){
       onTap: (){
         
         String idTarea=tarea.id;
-        List args=["$idTarea","$wip","$_idProyecto","${tarea.nombre}","$_proyectoResponsable",_esHistoria];
+        List args=["$idTarea","$wip","$_idProyecto","${tarea.nombre}","$_proyectoResponsable",_esHistoria,"${tarea.tipoTarea}"];
         Navigator.pushNamed(context, '/task',arguments: args).then((value) => setState((){}));
       },
     );
@@ -978,7 +978,8 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable,_esHistoria){
                 },
                 child: Icon(FlutterIcons.edit_ant,size: 38,color: Colors.white),
                 onTap: (){
-                  // Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
+                  List args=[_idProyecto,"proyecto"];
+                  Navigator.pushNamed(context, '/editarPage', arguments: args).then((value) => setState((){}));
                   
                 },
               ),

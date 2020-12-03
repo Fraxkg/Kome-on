@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kome_on/src/pages/allStatics_page.dart';
+import 'package:kome_on/src/pages/edit_page.dart';
 import 'package:kome_on/src/pages/editarPerfil.dart';
 
 import 'package:kome_on/src/pages/home_page.dart';
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
         '/nuevaTarea'     : ( BuildContext context ) => NuevaTareaPage(),
         '/editarPerfil'   : ( BuildContext context ) => EditarPerfilPage(),
         '/statics'        : ( BuildContext context ) => StaticsPage(),
-        '/allStatics'     : ( BuildContext context ) => AllStaticsPage()
+        '/allStatics'     : ( BuildContext context ) => AllStaticsPage(),
+        '/editarPage'     : ( BuildContext context ) => EditPage(),
       },
     );
   }

@@ -191,6 +191,7 @@ Widget _cuadroInfoDevs(context,dev){
     
     return TextFormField(
       //autofocus: true,
+      initialValue: nombre,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -227,7 +228,7 @@ Widget _cuadroInfoDevs(context,dev){
   Widget _crearPaterno(nombre){
     return TextFormField(
       //autofocus: true,
-      // initialValue: nombre,
+      initialValue: nombre,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -259,7 +260,7 @@ Widget _cuadroInfoDevs(context,dev){
   Widget _crearMaterno(nombre){
     return TextFormField(
       //autofocus: true,
-      // initialValue: nombre,
+      initialValue: nombre,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         border: OutlineInputBorder(
