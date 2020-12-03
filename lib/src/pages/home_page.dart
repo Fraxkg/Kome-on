@@ -40,7 +40,8 @@ class _HomePageState extends State<HomePage> {
   List proyectos=[];
   MediaQueryData queryData;
   int _indexNave =0;
-  
+  String esHistoria="no";
+
   final tabsTitle=[
     Text("Proyectos"),
      
@@ -122,7 +123,15 @@ class _HomePageState extends State<HomePage> {
             setState(() {});
           },
         ),
-      Container(),
+      FloatingActionButton(
+          backgroundColor: Colors.pink[300],
+          child: Icon(FlutterIcons.refresh_ccw_fea),
+          onPressed: (){
+            print("refresh");
+            
+            setState(() {});
+          },
+        ),
     ];
   
     var tabsBody=[
@@ -135,7 +144,7 @@ class _HomePageState extends State<HomePage> {
     //inicio de desar
     _crearTableroDevs(queryData,desarrolladorProvider),
       //Inicio de historias
-    Center(child: Text('Historias')),
+    _crearTableroHistoria(queryData,proyectosProvider)
     ];
     
     return WillPopScope(
@@ -489,8 +498,10 @@ Widget _obtenerProyectos(queryData,EquiposProvider equiposProvider){
   
  
 }
-Widget _crearTablero(queryData,proyectosProvider){
+Widget _crearTableroHistoria(queryData,proyectosProvider){
   
+    final DateTime _fechaActual =DateTime.now();
+    
     return FutureBuilder(
       
       future: proyectosProvider.cargarProyectos(),
@@ -504,11 +515,18 @@ Widget _crearTablero(queryData,proyectosProvider){
           for(int j=0;j<proyectoSel.length;j++){
             for(int k=0;k<proyectos.length;k++){
               if(proyectoSel[j].id==proyectos[k]){
-              seleccion.add(proyectoSel[j]);
+                String fechaFin=proyectoSel[j].fechaFin.replaceAll('/', "");
+                String dateWithTFin = fechaFin.substring(0, 8) + 'T000000';
+                DateTime finalProyecto = DateTime.parse(dateWithTFin);
+                if(!_fechaActual.isBefore(finalProyecto)){
+                  seleccion.add(proyectoSel[j]);
+                }
+                
               //print("c");
             }
             }
           }
+          esHistoria="si";
 //               Future.delayed(const Duration(seconds: 2), () {
 
 // // Here you can write your code
@@ -527,7 +545,72 @@ Widget _crearTablero(queryData,proyectosProvider){
                 crossAxisCount: 2,
                 childAspectRatio: .7,
               ),
-              itemBuilder: (context, i) =>_cardPostick(queryData,context,seleccion[i]),
+              itemBuilder: (context, i) =>_cardPostick(queryData,context,seleccion[i],esHistoria),
+            );
+          
+        }else{
+          return Column(
+            children:<Widget>[
+              Center(
+              child: CircularProgressIndicator()
+              ),
+              Text("No hay proyectos aún, agrega uno o actualiza la página")
+            ]
+              
+          );
+
+        }
+      }
+    );
+}
+Widget _crearTablero(queryData,proyectosProvider){
+  
+    final DateTime _fechaActual =DateTime.now();
+    
+    return FutureBuilder(
+      
+      future: proyectosProvider.cargarProyectos(),
+      builder: (BuildContext context, AsyncSnapshot<List<ProyectoModel>> snapshot){
+        
+        if(snapshot.hasData){
+          
+          List<ProyectoModel> seleccion=[];
+          final proyectoSel = snapshot.data;
+
+          for(int j=0;j<proyectoSel.length;j++){
+            for(int k=0;k<proyectos.length;k++){
+              if(proyectoSel[j].id==proyectos[k]){
+                String fechaFin=proyectoSel[j].fechaFin.replaceAll('/', "");
+                String dateWithTFin = fechaFin.substring(0, 8) + 'T000000';
+                DateTime finalProyecto = DateTime.parse(dateWithTFin);
+                if(_fechaActual.isBefore(finalProyecto)){
+                  seleccion.add(proyectoSel[j]);
+                }
+                
+              //print("c");
+            }
+            }
+          }
+          esHistoria="no";
+//               Future.delayed(const Duration(seconds: 2), () {
+
+// // Here you can write your code
+
+//                   setState(() {
+//                     // Here you can write your code for open new view
+//                   });
+
+//                 });
+              return GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: seleccion.length,
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                
+                crossAxisCount: 2,
+                childAspectRatio: .7,
+              ),
+              itemBuilder: (context, i) =>_cardPostick(queryData,context,seleccion[i],esHistoria),
             );
           
         }else{
@@ -642,7 +725,7 @@ Widget _devs(queryData,context,DesarrolladorModel dev){
   );
 }
 //Wdiget creacion de proyectos
-Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto){
+Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto,String story){
 
   return  InkWell(
     child: Padding(
@@ -690,7 +773,7 @@ Widget _cardPostick(MediaQueryData screenWidth,  context, ProyectoModel proyecto
       ),
     ),
     onTap: (){
-      List args= ["${proyecto.id}", "${proyecto.nombre}","${proyecto.fechaInicio}","${proyecto.responsable}"];
+      List args= ["${proyecto.id}", "${proyecto.nombre}","${proyecto.fechaInicio}","${proyecto.responsable}",story];
       Navigator.pushNamed(context, '/project',arguments: args);
     },
   );

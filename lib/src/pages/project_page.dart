@@ -48,8 +48,10 @@ class _ProjectPageState extends State<ProjectPage> {
     String _nombreProyecto=arguments[1];
     String _proyectoFechaInicio=arguments[2];
     String _proyectoResponsable=arguments[3];
+    String _esHistoria= arguments[4];
 
-    if(_prefs.email==_proyectoResponsable){
+    print(_esHistoria);
+    if(_prefs.email==_proyectoResponsable &&_esHistoria=="no"){
       flagAdmin=true;
     }
     //print(_idProyecto);
@@ -84,7 +86,7 @@ class _ProjectPageState extends State<ProjectPage> {
          
         ]
       ),
-      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable)),
+      body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable,_esHistoria)),
      
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -127,13 +129,13 @@ class _ProjectPageState extends State<ProjectPage> {
     });
   }
   
-  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable){
+  Widget _pantallaProyectos(MediaQueryData queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable,_esHistoria){
     
     return SingleChildScrollView(
       child: Column(
         children: [
           
-          _tablero(_idProyecto,_proyectoResponsable),
+          _tablero(_idProyecto,_proyectoResponsable,_esHistoria),
           Divider(),
           _verificarEquipo(_idProyecto),
           Divider(),
@@ -151,7 +153,7 @@ class _ProjectPageState extends State<ProjectPage> {
   }
 
 //informacion de las tareas ToDo
-Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto,_proyectoResponsable){
+Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto,_proyectoResponsable,_esHistoria){
   return FutureBuilder(
     future: tareasProvider.cargarTareas(),
     builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -172,7 +174,7 @@ Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto,_proyectoRes
             shrinkWrap: true,
             //4 ahorita
             itemCount: seleccion.length,
-            itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
+            itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable,_esHistoria),
             
           );
 
@@ -183,7 +185,7 @@ Widget _recuperarInfoTareaToDo(queryData,tareasProvider,_idProyecto,_proyectoRes
   );
 }
 // in p rogress
-Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux,_proyectoResponsable){
+Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux,_proyectoResponsable,_esHistoria){
       return FutureBuilder(
         future: tareasProvider.cargarTareas(),
         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -209,7 +211,7 @@ Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux,_p
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable,_esHistoria),
                 
               );
 
@@ -220,7 +222,7 @@ Widget _recuperarInfoTareaInProgress(queryData,tareasProvider,_idProyecto,aux,_p
       );
   }
 /// done
-Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto,_proyectoResponsable){
+Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto,_proyectoResponsable,_esHistoria){
       return FutureBuilder(
         future: tareasProvider.cargarTareas(),
         builder: (BuildContext context, AsyncSnapshot<List<TareaModel>> snapshot){
@@ -241,7 +243,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto,_proyectoRes
                 shrinkWrap: true,
                 //4 ahorita
                 itemCount: seleccion.length,
-                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable),
+                itemBuilder: (context,i) => _crearTareas(seleccion[i],_idProyecto,_proyectoResponsable,_esHistoria),
                 
               );
 
@@ -253,7 +255,7 @@ Widget _recuperarInfoTareaDone(queryData,tareasProvider,_idProyecto,_proyectoRes
   }
 
 //crear postiti
-_crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
+_crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable,_esHistoria){
     List<double> margenes=_numero25();
     Color mainColor=Colors.yellow[200];
     Color borderColor=Colors.white;
@@ -346,7 +348,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
       onTap: (){
         
         String idTarea=tarea.id;
-        List args=["$idTarea","$wip","$_idProyecto","${tarea.nombre}","$_proyectoResponsable"];
+        List args=["$idTarea","$wip","$_idProyecto","${tarea.nombre}","$_proyectoResponsable",_esHistoria];
         Navigator.pushNamed(context, '/task',arguments: args).then((value) => setState((){}));
       },
     );
@@ -464,7 +466,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
     );
   }
 
-  Widget _tablero(_idProyecto,_proyectoResponsable){
+  Widget _tablero(_idProyecto,_proyectoResponsable,_esHistoria){
     return Container(
       margin: EdgeInsets.only(left:5, top: 10, bottom: 10,right:5),
       
@@ -502,7 +504,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaToDo(queryData, tareasProvider, _idProyecto,_proyectoResponsable)
+                          _recuperarInfoTareaToDo(queryData, tareasProvider, _idProyecto,_proyectoResponsable,_esHistoria)
                          
                         ],
                       ),
@@ -543,7 +545,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto,aux,_proyectoResponsable)
+                          _recuperarInfoTareaInProgress(queryData, tareasProvider, _idProyecto,aux,_proyectoResponsable,_esHistoria)
                          
                         ],
                       ),
@@ -584,7 +586,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
 ///margin right left tiene que ser =25
                         children: <Widget>[
     //insercionS
-                          _recuperarInfoTareaDone(queryData, tareasProvider, _idProyecto,_proyectoResponsable)
+                          _recuperarInfoTareaDone(queryData, tareasProvider, _idProyecto,_proyectoResponsable,_esHistoria)
                          
                         ],
                       ),
@@ -759,7 +761,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
         final DateTime now=DateTime.now();
         final DateFormat formatter =DateFormat('yyyy/MM/dd');
         final String formatted = formatter.format(now);
-        print(formatted);
+        // print(formatted);
         List nodash=formatted.split("/");
         List<int> _fechaActual=[];
         _fechaActual.add(int.parse(nodash[0]));

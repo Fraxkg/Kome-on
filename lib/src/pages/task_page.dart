@@ -24,6 +24,7 @@ class _TaskPageState extends State<TaskPage> {
   int _indexNave=0;
   bool _admin=false;
   bool _editMode=false;
+  bool flagNoHistoria=true;
   final tareasProvider= new TareasProvider();
   final proyectosProvider = new ProyectosProvider();
   MediaQueryData queryData;
@@ -35,8 +36,11 @@ class _TaskPageState extends State<TaskPage> {
     String _idProyecto =arguments[2];
     String _nombreTarea =arguments[3];
     String _responsable =arguments[4];
-
-    if(_responsable==_prefs.email){
+    String _esHistoria = arguments[5];
+    if(_esHistoria=="si"){
+      flagNoHistoria=false;
+    }
+    if(_responsable==_prefs.email&&_esHistoria=="no"){
       _admin=true;
     }
     // print(_idTarea+_wipActual);
@@ -100,7 +104,7 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       _indexNave = index;
       int args=index;
-      Navigator.pushReplacementNamed(context,'/home',arguments:args);
+      Navigator.pushReplacementNamed(context,'/home',arguments:args).then((value) => setState((){}));
       
     });
   }
@@ -512,58 +516,73 @@ class _TaskPageState extends State<TaskPage> {
     print("wip actual: "+_wipActual);
     if(tarea.estadoTarea=="To-do"){
       
-      return Container(
-        margin: EdgeInsets.all(10),
-        child: RaisedButton(
-          
-          padding: EdgeInsets.all(20),
-          child: Text('Aceptar Tarea',style: TextStyle(fontSize: 20),),
-          color: Colors.cyan,
-          textColor: Colors.white,
-          shape: StadiumBorder(),
-          onPressed: (){
-          if(tarea.responsable=="No asignado" || tarea.responsable==_prefs.email){
-            if(int.parse(_wipActual)<int.parse(wipLimite)){
-              tarea.estadoTarea="In progress";    
-              tarea.responsable=_prefs.email;
-              tarea.fechaInicio=formatted;
-              tareasProvider.editarTarea(tarea); 
-              setState(() {
-                
-              });
+      return Visibility(
+        child: Container(
+          margin: EdgeInsets.all(10),
+          child: RaisedButton(
+            
+            padding: EdgeInsets.all(20),
+            child: Text('Aceptar Tarea',style: TextStyle(fontSize: 20),),
+            color: Colors.cyan,
+            textColor: Colors.white,
+            shape: StadiumBorder(),
+            onPressed: (){
+            if(tarea.responsable=="No asignado" || tarea.responsable==_prefs.email){
+              if(int.parse(_wipActual)<int.parse(wipLimite)){
+                tarea.estadoTarea="In progress";    
+                tarea.responsable=_prefs.email;
+                tarea.fechaInicio=formatted;
+                tareasProvider.editarTarea(tarea); 
+                setState(() {
+                  
+                });
+              }else{
+                llamarToast("Excediste el wip");
+              }
             }else{
-              llamarToast("Excediste el wip");
+             return Container(width: 10,height: 10,);
             }
-          }else{
-           return Container(width: 10,height: 10,);
-          }
 
-        } 
+          } 
    ),
+        ),
+        visible: flagNoHistoria,
       ); 
     }else if(tarea.estadoTarea=="In progress"){
-      return Container(
-        margin: EdgeInsets.all(10),
-        child: RaisedButton(
-          
-          padding: EdgeInsets.all(20),
-          child: Text('Finalizar Tarea',style: TextStyle(fontSize: 20),),
-          color: Colors.cyan,
-          textColor: Colors.white,
-          shape: StadiumBorder(),
-          onPressed: (){
-              tarea.fechaFin=formatted;
-              tarea.estadoTarea="Done";    
-              tareasProvider.editarTarea(tarea); 
-              setState(() {
+      return Visibility(
+        child: Container(
+          margin: EdgeInsets.all(10),
+          child: RaisedButton(
+            
+            padding: EdgeInsets.all(20),
+            child: Text('Finalizar Tarea',style: TextStyle(fontSize: 20),),
+            color: Colors.cyan,
+            textColor: Colors.white,
+            shape: StadiumBorder(),
+            onPressed: (){
+              if(tarea.responsable=="No asignado" || tarea.responsable==_prefs.email){
+             
                 
-              });
-           
-            return Container(width: 10,height:10);
-          
+                tarea.fechaFin=formatted;
+                tarea.estadoTarea="Done";    
+                tareasProvider.editarTarea(tarea); 
+                setState(() {
+                  
+                });
+              
+            }else{
+              llamarToast("No es tu Task");
+             return Container(width: 10,height: 10,);
+            }
+                
+             
+              return Container(width: 10,height:10);
+            
 
-        } 
+          } 
    ),
+        ),
+        visible: flagNoHistoria,
       ); 
     }else if(tarea.estadoTarea=="Done"){
       return Container(
