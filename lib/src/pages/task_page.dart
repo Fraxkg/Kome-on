@@ -504,7 +504,7 @@ class _TaskPageState extends State<TaskPage> {
   
   Widget _botonAccion(TareaModel tarea,_wipActual){
     final DateTime now=DateTime.now();
-    final DateFormat formatter =DateFormat('yyyy-MM-dd');
+    final DateFormat formatter =DateFormat('yyyy/MM/dd');
     final String formatted = formatter.format(now);
 
 

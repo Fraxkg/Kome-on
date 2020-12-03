@@ -60,8 +60,8 @@ class _AllStaticsPageState extends State<AllStaticsPage> {
       child: Column(
         children: [
                     
-          _verificarEquipo(_idProyecto),
-          _recuperarInfoMiembros(_idProyecto,_fechaInicioProyecto),
+          _verificarEquipo(_idProyecto,_fechaInicioProyecto),
+          // // _recuperarInfoMiembros(_idProyecto,_fechaInicioProyecto),
           Divider(),
           // _recuperarInfo(queryData,proyectosProvider,_idProyecto,aux),
          
@@ -139,7 +139,7 @@ class _AllStaticsPageState extends State<AllStaticsPage> {
       );
   }
 
-  Widget _verificarEquipo(String proyectoId){
+  Widget _verificarEquipo(String proyectoId,_fechaInicioProyecto){
     
     return FutureBuilder(
       future: equiposProvider.cargarEquipo(),
@@ -155,9 +155,7 @@ class _AllStaticsPageState extends State<AllStaticsPage> {
             }
           }
          
-          return Container(
-            height: 1,
-          );
+          return _recuperarInfoMiembros(proyectoId,_fechaInicioProyecto);
           
         }else{
           return Center(child: CircularProgressIndicator());
@@ -169,7 +167,7 @@ class _AllStaticsPageState extends State<AllStaticsPage> {
 
   Widget _mostrarListaDevs(DesarrolladorModel dev,_idProyecto,_fechaInicioProyecto){
     String userId=dev.userId;
-    List args=["$userId","$_idProyecto","$_fechaInicioProyecto"];
+    List args=["$userId","$_idProyecto","$_fechaInicioProyecto","${dev.correo}"];
     return ListTile(
       title: Text(dev.nombre+" "+dev.apePaterno+" "+dev.apeMaterno),
       subtitle: Text(dev.correo,style: TextStyle(color: Colors.blue),),  

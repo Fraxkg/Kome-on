@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 
-                FadeInImage(placeholder: AssetImage("assets/placeholder.png"), image: AssetImage("assets/placeholder.png"),width: 100,height:100,),
+                FadeInImage(placeholder: AssetImage("assets/placeholder.png"), image: NetworkImage(urlAvatar),width: 100,height:100,),
                 Text("Hola, "+_prefs.email,style: TextStyle(color: Colors.white,fontSize: 20)),
               ],
             ),

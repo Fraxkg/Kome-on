@@ -30,13 +30,16 @@ class _ProjectPageState extends State<ProjectPage> {
   
   final _prefs= new PreferenciasUsuario();
   MediaQueryData queryData;
-  
+  bool flagAdmin=false;
   String _idEquipo='';
   final proyectosProvider = new ProyectosProvider();
   final tareasProvider = new TareasProvider();
   final equiposProvider = new EquiposProvider();
    final miembrosProvider = new MiembrosProvider();
   int _indexNave=0;
+  String adminOP='1';
+  // List _adminOP= ['1','2','3'];
+  String adminOPSelec;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,10 @@ class _ProjectPageState extends State<ProjectPage> {
     String _nombreProyecto=arguments[1];
     String _proyectoFechaInicio=arguments[2];
     String _proyectoResponsable=arguments[3];
+
+    if(_prefs.email==_proyectoResponsable){
+      flagAdmin=true;
+    }
     //print(_idProyecto);
     queryData = MediaQuery.of(context);
     return Scaffold(
@@ -52,27 +59,29 @@ class _ProjectPageState extends State<ProjectPage> {
         title: SingleChildScrollView(child: Text("$_nombreProyecto")),
         backgroundColor: Color.fromRGBO(55, 57, 84, 1.0),
         actions: <Widget>[
-         
-          InkWell(
-            onLongPress: (){
-              
-            },
-            child: Icon(FlutterIcons.addfile_ant,size: 38,),
-            onTap: (){
-              Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
-              
-            },
-          ),InkWell(
-            onLongPress: (){
-              
-            },
-            child: Icon(FlutterIcons.user_plus_fea,size: 38,),
-            onTap: (){
-              _invitarMiembros(context, _idEquipo);
-              
-            },
+          Visibility(
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                child: DropdownButton(
+                  //icon: Icon(Icons.expand_more,size: 40,color: Colors.white,),
+                  style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+                  items: getOpcionesAdmin(_idProyecto),
+                  value: adminOPSelec,
+                  dropdownColor: Color.fromRGBO(55, 57, 84, 1.0),
+                  onTap: (){},
+                  onChanged: (op){
+                      setState(() {
+                        
+                      });
+                    },
+                  hint: Icon(Icons.admin_panel_settings,size: 38,color: Colors.white),
+                ),
+              ),
+            ),
+          visible:flagAdmin,
           ),
           
+         
         ]
       ),
       body: RefreshIndicator(onRefresh: _handleRefresh,child:_pantallaProyectos(queryData,_idProyecto,aux,_proyectoFechaInicio,_proyectoResponsable)),
@@ -748,10 +757,10 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
       if(snapshot.hasData){
         //print("buscar proyectos de"+_idProyecto);
         final DateTime now=DateTime.now();
-        final DateFormat formatter =DateFormat('yyyy-MM-dd');
+        final DateFormat formatter =DateFormat('yyyy/MM/dd');
         final String formatted = formatter.format(now);
         print(formatted);
-        List nodash=formatted.split("-");
+        List nodash=formatted.split("/");
         List<int> _fechaActual=[];
         _fechaActual.add(int.parse(nodash[0]));
         _fechaActual.add(int.parse(nodash[1]));
@@ -766,7 +775,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
             for(int j=0;j<tareas.length;j++){
               if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="In progress" ){
                 String _fechatarea=tareas[j].fechaInicio;
-                List nodash=_fechatarea.split("-");
+                List nodash=_fechatarea.split("/");
                 List<int> _fecha=[];
                 _fecha.add(int.parse(nodash[0]));
                 _fecha.add(int.parse(nodash[1]));
@@ -791,7 +800,7 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
               }
               else if(tareas[j].proyectoId==_idProyecto && tareas[j].estadoTarea=="Done" ){
                 String _fechatarea=tareas[j].fechaFin;
-                List nodash=_fechatarea.split("-");
+                List nodash=_fechatarea.split("/");
                 List<int> _fecha=[];
                 _fecha.add(int.parse(nodash[0]));
                 _fecha.add(int.parse(nodash[1]));
@@ -955,7 +964,61 @@ _crearTareas(TareaModel tarea, _idProyecto,_proyectoResponsable){
       }
     );
   }
+  List<DropdownMenuItem<String>>getOpcionesAdmin(_idProyecto){
+      
+    List<DropdownMenuItem<String>> lista = new List();
+     // lista.add(DropdownMenuItem(child: Icon(Icons.admin_panel_settings,size: 38,color: Colors.white)));
+      lista.add(DropdownMenuItem(
+          child: Center(
+            child: InkWell(
+                onLongPress: (){
+                  
+                },
+                child: Icon(FlutterIcons.edit_ant,size: 38,color: Colors.white),
+                onTap: (){
+                  // Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
+                  
+                },
+              ),
+          ),
+          value: adminOP,
+        ));
+    
+    lista.add(DropdownMenuItem(
+          child: Center(
+            child: InkWell(
+                onLongPress: (){
+                  
+                },
+                child: Icon(FlutterIcons.addfile_ant,size: 38,color: Colors.white),
+                onTap: (){
+                  Navigator.pushNamed(context, '/nuevaTarea', arguments: _idProyecto).then((value) => setState((){}));
+                  
+                },
+              ),
+          ),
+            value: adminOP,
+        ));
+        lista.add(DropdownMenuItem(
+          child: Center(
+            child: InkWell(
+                onLongPress: (){
+                  
+                },
+                child: Icon(FlutterIcons.user_plus_fea,size: 38,color: Colors.white),
+                onTap: (){
+                  _invitarMiembros(context, _idEquipo);
+                  
+                },
+              ),
+          ),
+            value: adminOP,
+        ));
+    
+    
+    return lista;
 
+  }
 }
 void _invitarMiembros(context,_idEquipo) {
     showDialog(
